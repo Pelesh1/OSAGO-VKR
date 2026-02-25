@@ -29,13 +29,21 @@ OSAGO-VKR
 - Свободен порт `8080` (или изменить порт приложения)
 
 Тесты
+
+
 Запуск тестов:
 .\mvnw.cmd test
 
 
 Нагрузочное тестирование (JMeter)
+
+
 В репозитории есть материалы в load/.
+
+
 Пример CLI-запуска:
+
+
 jmeter -n -t C:\path\to\osago\load\osago_load_500.jmx -l C:\path\to\osago\load\results_500.jtl -e -o C:\path\to\osago\load\report_500
 После выполнения HTML-отчет открывать из:
 load/report_500/index.html (пример)
