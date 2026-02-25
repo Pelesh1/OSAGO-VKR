@@ -1,0 +1,260 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Страховые претензии</title>
+    <style>
+        :root {
+            --bg: #f3f6fb;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+        }
+
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; color: var(--text); background: var(--bg); }
+
+        .header { background: var(--surface); border-bottom: 1px solid var(--border); }
+        .container { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
+
+        .header__inner {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .brand {
+            text-decoration: none;
+            color: #111827;
+            font-weight: 700;
+            font-size: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand::before {
+            content: "🛡";
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .nav { display: flex; align-items: center; gap: 26px; }
+        .nav a { text-decoration: none; color: #374151; font-size: 14px; }
+
+        .cabinet-btn {
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #fff;
+            height: 34px;
+            padding: 0 12px;
+            cursor: pointer;
+            color: #111827;
+        }
+
+        main { padding: 36px 0 56px; }
+
+        h1 {
+            margin: 0;
+            font-size: 46px;
+            line-height: 1.08;
+            letter-spacing: -0.01em;
+        }
+
+        .subtitle {
+            margin: 10px 0 26px;
+            color: var(--muted);
+            font-size: 20px;
+        }
+
+        .table-wrap {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th, td {
+            text-align: left;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+            font-size: 14px;
+        }
+        th { color: #374151; font-size: 14px; font-weight: 600; background: #fff; }
+        tbody tr:last-child td { border-bottom: 0; }
+
+        .col-number { width: 15%; }
+        .col-policy { width: 15%; }
+        .col-date { width: 12%; }
+        .col-desc { width: 29%; }
+        .col-status { width: 14%; }
+        .col-action { width: 15%; }
+
+        .desc-cell {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge--review { background: #fde68a; color: #92400e; }
+        .badge--approved { background: #dcfce7; color: #15803d; }
+        .badge--paid { background: #dbeafe; color: #1d4ed8; }
+        .badge--rejected { background: #fee2e2; color: #b91c1c; }
+        .badge--sent { background: #ffedd5; color: #c2410c; }
+        .badge--default { background: #eef2ff; color: #3730a3; }
+
+        .action-cell { white-space: nowrap; }
+        .details-btn {
+            border: 0;
+            border-radius: 8px;
+            background: transparent;
+            color: #111827;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 4px 6px;
+        }
+        .details-btn:hover { background: #f8fafc; }
+
+        .summary {
+            margin-top: 24px;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .summary-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fff;
+            padding: 14px;
+            min-height: 92px;
+        }
+        .summary-card__label { margin: 0; color: #6b7280; font-size: 14px; }
+        .summary-card__value { margin: 8px 0 0; font-size: 38px; font-weight: 700; line-height: 1; }
+
+        .divider { margin: 24px 0 18px; border: 0; border-top: 1px solid var(--border); }
+
+        .back-btn {
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            background: #fff;
+            height: 36px;
+            padding: 0 16px;
+            cursor: pointer;
+            color: #111827;
+        }
+
+        .error {
+            margin: 0 0 14px;
+            padding: 12px 14px;
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: #991b1b;
+            border-radius: 10px;
+            display: none;
+        }
+
+        @media (max-width: 1100px) {
+            h1 { font-size: 40px; }
+            .subtitle { font-size: 18px; }
+            .summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 860px) {
+            .container { width: min(1120px, calc(100% - 24px)); }
+            .header__inner { height: auto; padding: 12px 0; flex-wrap: wrap; }
+            .nav { width: 100%; order: 3; gap: 16px; }
+            h1 { font-size: 34px; }
+            .subtitle { font-size: 16px; }
+            .table-wrap { overflow-x: auto; }
+            table { min-width: 980px; }
+            .summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <a class="brand" href="/">ОСАГО Онлайн</a>
+        <nav class="nav">
+            <a href="/cabinet/client/policies/index.html">Полисы</a>
+            <a href="/cabinet/client/claims/index.html">Заявления</a>
+            <a href="/cabinet/client/chat/index.html">Поддержка</a>
+            <a href="/about/index.html">О компании</a>
+        </nav>
+        <button id="cabinetBtn" class="cabinet-btn" type="button">Личный кабинет</button>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <h1>Страховые претензии</h1>
+        <p class="subtitle">Просмотр и обработка страховых случаев клиентов</p>
+
+        <div id="err" class="error"></div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th class="col-number">Номер претензии</th>
+                    <th class="col-policy">Номер полиса</th>
+                    <th class="col-date">Дата ДТП</th>
+                    <th class="col-desc">Описание</th>
+                    <th class="col-status">Статус</th>
+                    <th class="col-action">Действия</th>
+                </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
+        </div>
+
+        <div class="summary">
+            <div class="summary-card">
+                <p class="summary-card__label">Всего претензий</p>
+                <p id="totalCount" class="summary-card__value">0</p>
+            </div>
+            <div class="summary-card">
+                <p class="summary-card__label">Новые</p>
+                <p id="sentCount" class="summary-card__value" style="color:#f54900;">0</p>
+            </div>
+            <div class="summary-card">
+                <p class="summary-card__label">На рассмотрении</p>
+                <p id="reviewCount" class="summary-card__value" style="color:#ca8a04;">0</p>
+            </div>
+            <div class="summary-card">
+                <p class="summary-card__label">Одобрено</p>
+                <p id="approvedCount" class="summary-card__value" style="color:#16a34a;">0</p>
+            </div>
+            <div class="summary-card">
+                <p class="summary-card__label">Выплачено</p>
+                <p id="paidCount" class="summary-card__value" style="color:#2563eb;">0</p>
+            </div>
+        </div>
+
+        <hr class="divider" />
+        <button id="backBtn" class="back-btn" type="button">Назад в личный кабинет</button>
+    </div>
+</main>
+
+<script src="/cabinet/client/claims/claims.js"></script>
+</body>
+</html>

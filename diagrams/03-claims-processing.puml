@@ -1,0 +1,76 @@
+@startuml
+title OSAGO System - Claims Processing
+
+skinparam linetype ortho
+skinparam packageStyle rectangle
+
+package "Controllers" {
+  class ClientClaimsController
+  class ClaimController
+  class AgentClaimsController
+}
+
+package "Service Layer" {
+  class ClaimService {
+    +approve(id, req)
+    +reject(id, req)
+    +close(id, req)
+  }
+}
+
+package "DTO" {
+  class CreateClientClaimRequest
+  class ApproveRequest
+  class RejectRequest
+  class CloseRequest
+}
+
+package "Entities" {
+  class ClaimEntity
+  class ClaimAttachmentEntity
+  enum ClaimStatus
+  enum AccidentType
+}
+
+package "Repository" {
+  interface ClaimRepository
+  interface ClaimAttachmentRepository
+}
+
+package "Common" {
+  class JdbcTemplate
+  interface UserRepository
+}
+
+ClientClaimsController --> JdbcTemplate
+ClientClaimsController --> ClaimAttachmentRepository
+ClientClaimsController --> UserRepository
+ClientClaimsController --> CreateClientClaimRequest
+
+ClaimController --> ClaimService
+ClaimController --> ApproveRequest
+ClaimController --> RejectRequest
+ClaimController --> CloseRequest
+
+AgentClaimsController --> JdbcTemplate
+AgentClaimsController --> ClaimAttachmentRepository
+AgentClaimsController --> UserRepository
+
+ClaimService --> ClaimRepository
+ClaimService --> ClaimEntity
+
+ClaimRepository --> ClaimEntity
+ClaimAttachmentRepository --> ClaimAttachmentEntity
+ClaimAttachmentEntity --> ClaimEntity
+
+ClaimEntity --> ClaimStatus
+ClaimEntity --> AccidentType
+
+note right of ClaimStatus
+NEW -> IN_REVIEW -> NEED_INFO
+NEED_INFO -> IN_REVIEW
+IN_REVIEW -> APPROVED | REJECTED
+APPROVED | REJECTED -> CLOSED
+end note
+
+@enduml

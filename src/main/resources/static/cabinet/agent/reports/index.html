@@ -1,0 +1,170 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Формирование отчетов</title>
+    <style>
+        :root {
+            --bg:#f3f4f6;
+            --surface:#ffffff;
+            --border:#e5e7eb;
+            --text:#111827;
+            --muted:#64748b;
+            --primary:#030621;
+            --blue:#2563eb;
+            --green:#10b981;
+        }
+        * { box-sizing: border-box; }
+        body { margin:0; font-family: Arial, sans-serif; background:var(--bg); color:var(--text); }
+        .container { width:min(1160px, calc(100% - 28px)); margin:20px auto 32px; }
+
+        h1 { margin:0; font-size:34px; font-weight:800; letter-spacing:-0.02em; }
+        .sub { margin:8px 0 0; color:#5b6b82; font-size:20px; }
+
+        .card { margin-top:18px; background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px; }
+        .section-title { font-size:24px; font-weight:700; margin:0 0 12px; }
+
+        .filters { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; align-items:end; }
+        .field { display:flex; flex-direction:column; gap:8px; }
+        .label { color:#334155; font-size:16px; font-weight:600; }
+        .input, .select, .btn { height:44px; border-radius:10px; font-size:16px; }
+        .input, .select { border:1px solid #d8deea; padding:0 14px; }
+        .btn { border:0; cursor:pointer; }
+        .btn-primary { background:var(--primary); color:#fff; font-weight:700; }
+
+        .report-head { margin-top:20px; display:flex; align-items:flex-end; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+        .report-title { font-size:30px; margin:0; font-weight:800; letter-spacing:-0.02em; }
+        .period { margin-top:6px; color:#5b6b82; font-size:16px; }
+        .export-actions { display:flex; gap:10px; }
+        .btn-secondary { height:40px; border:1px solid #d8deea; border-radius:10px; background:#fff; color:#1f2937; padding:0 14px; font-size:15px; cursor:pointer; }
+
+        .table-wrap { margin-top:16px; border:1px solid #e3e8f0; border-radius:12px; overflow:auto; }
+        table { width:100%; border-collapse: collapse; min-width:920px; }
+        th, td { border-bottom:1px solid #edf1f7; padding:10px 8px; font-size:14px; text-align:left; vertical-align:top; }
+        th { color:#5b6b82; background:#fafbfc; font-weight:700; }
+        tr:last-child td { border-bottom:0; }
+
+        .chart-card { margin-top:18px; background:#fff; border:1px solid var(--border); border-radius:16px; padding:18px; }
+        .chart-title { font-size:20px; margin:0 0 10px; }
+        .chart-wrap { min-height:250px; display:grid; place-items:center; }
+        .pie { width:180px; height:180px; border-radius:50%; position:relative; }
+        .pie-legend { margin-top:10px; display:flex; gap:14px; flex-wrap:wrap; justify-content:center; color:#334155; font-size:14px; }
+        .legend-item { display:flex; align-items:center; gap:8px; }
+        .legend-dot { width:12px; height:12px; border-radius:50%; }
+
+        .summary { margin-top:18px; display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+        .summary-card { background:#fff; border:1px solid var(--border); border-radius:12px; min-height:96px; display:grid; place-items:center; text-align:center; }
+        .summary-label { color:#64748b; font-size:15px; }
+        .summary-value { margin-top:6px; font-size:36px; font-weight:800; letter-spacing:-0.02em; }
+        .summary-value.blue { color:#2563eb; }
+        .summary-value.green { color:#059669; }
+
+        .footer { margin-top:18px; padding-top:14px; border-top:1px solid #e5e7eb; }
+        .back-btn { height:38px; border:1px solid #d8deea; border-radius:10px; background:#fff; color:#1f2937; padding:0 14px; font-size:14px; cursor:pointer; }
+
+        .error { margin-top:12px; border:1px solid #fecaca; background:#fef2f2; color:#991b1b; border-radius:10px; padding:10px 12px; display:none; font-size:18px; }
+
+        @media (max-width: 1024px) {
+            h1 { font-size:34px; }
+            .sub { font-size:22px; }
+            .report-title { font-size:30px; }
+            .filters { grid-template-columns:1fr; }
+            .summary { grid-template-columns:1fr; }
+            .input, .select, .btn { font-size:18px; }
+            th, td { font-size:16px; }
+        }
+    </style>
+</head>
+<body>
+<main class="container">
+    <h1>Формирование отчетов</h1>
+    <p class="sub">Анализ и формирование отчетной информации по страховой деятельности</p>
+
+    <section class="card">
+        <h2 class="section-title">Параметры отчета</h2>
+        <div class="filters">
+            <div class="field">
+                <label class="label" for="from">Дата начала</label>
+                <input id="from" class="input" type="date" />
+            </div>
+            <div class="field">
+                <label class="label" for="to">Дата окончания</label>
+                <input id="to" class="input" type="date" />
+            </div>
+            <div class="field">
+                <label class="label" for="type">Тип отчета</label>
+                <select id="type" class="select">
+                    <option value="POLICIES">По оформленным полисам</option>
+                    <option value="CLAIMS">По страховым случаям</option>
+                </select>
+            </div>
+            <button id="buildBtn" class="btn btn-primary" type="button">Сформировать отчет</button>
+        </div>
+        <div id="errorBox" class="error"></div>
+    </section>
+
+    <section class="report-head">
+        <div>
+            <h2 id="reportTitle" class="report-title">По оформленным полисам</h2>
+            <div id="periodText" class="period">Период: —</div>
+        </div>
+        <div class="export-actions">
+            <button id="pdfBtn" class="btn-secondary" type="button">Экспорт в PDF</button>
+            <button id="csvBtn" class="btn-secondary" type="button">Экспорт в Excel</button>
+        </div>
+    </section>
+
+    <section class="card">
+        <h3 class="section-title" style="font-size:30px;">Сводная таблица</h3>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                <tr>
+                    <th>Показатель</th>
+                    <th>Количество</th>
+                    <th>Сумма</th>
+                    <th>Период</th>
+                </tr>
+                </thead>
+                <tbody id="summaryBody"></tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="chart-card">
+        <h3 class="chart-title">Графическое представление</h3>
+        <div class="chart-wrap">
+            <div id="pie" class="pie"></div>
+            <div id="pieLegend" class="pie-legend"></div>
+        </div>
+    </section>
+
+    <section class="summary">
+        <div class="summary-card">
+            <div>
+                <div class="summary-label">Всего записей</div>
+                <div id="cardTotal" class="summary-value blue">0</div>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div>
+                <div class="summary-label">Общая сумма</div>
+                <div id="cardAmount" class="summary-value green">0 ₽</div>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div>
+                <div class="summary-label">Период отчета</div>
+                <div id="cardDays" class="summary-value" style="font-size:38px;">0 дней</div>
+            </div>
+        </div>
+    </section>
+
+    <div class="footer">
+        <button id="backBtn" class="back-btn" type="button">← Назад в личный кабинет</button>
+    </div>
+</main>
+<script src="/cabinet/agent/reports/reports.js"></script>
+</body>
+</html>

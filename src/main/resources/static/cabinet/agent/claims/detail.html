@@ -1,0 +1,528 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Претензия - Кабинет агента</title>
+    <style>
+        :root {
+            --bg: #f3f6fb;
+            --surface: #ffffff;
+            --border: #e6ebf2;
+            --text: #0f172a;
+            --muted: #64748b;
+            --primary: #0b1223;
+            --blue: #2563eb;
+            --green-bg: #eaf9ef;
+            --green-text: #15803d;
+            --green-chip-bg: #dcfce7;
+            --green-chip-text: #15803d;
+            --orange-chip-bg: #ffedd5;
+            --orange-chip-text: #c2410c;
+            --red-bg: #fff1f2;
+            --red-text: #b91c1c;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        .header {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .container {
+            width: min(1120px, calc(100% - 24px));
+            margin: 0 auto;
+        }
+
+        .header__inner {
+            min-height: 62px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            text-decoration: none;
+            color: #111827;
+        }
+
+        .brand__icon {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #2563eb;
+            border-radius: 10px;
+            display: inline-flex;
+        }
+
+        .nav {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+        }
+
+        .nav a {
+            color: #334155;
+            text-decoration: none;
+        }
+
+        .user {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #334155;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 10px;
+            background: #fff;
+        }
+
+        .main {
+            padding: 28px 0 40px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #334155;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .topline {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 42px;
+            line-height: 1.1;
+        }
+
+        .sub {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+            margin-top: 8px;
+        }
+
+        .status-NEW,
+        .status-IN_REVIEW { background: #e0e7ff; color: #4338ca; }
+        .status-NEED_INFO { background: var(--orange-chip-bg); color: var(--orange-chip-text); }
+        .status-APPROVED,
+        .status-CLOSED { background: var(--green-chip-bg); color: var(--green-chip-text); }
+        .status-REJECTED { background: #fee2e2; color: #b91c1c; }
+
+        .grid {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .card h3 {
+            margin: 0 0 12px;
+            font-size: 18px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .field { min-width: 0; }
+
+        .field-label {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .field-value {
+            font-size: 18px;
+            line-height: 1.35;
+            color: #1f2937;
+            word-break: break-word;
+        }
+
+        .field-value.small {
+            font-size: 16px;
+        }
+
+        .full { grid-column: 1 / -1; }
+
+        .event-type {
+            display: inline-flex;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: var(--orange-chip-bg);
+            color: var(--orange-chip-text);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .amount-box {
+            border-radius: 10px;
+            background: var(--green-bg);
+            color: var(--green-text);
+            padding: 18px;
+            text-align: center;
+            margin-top: 6px;
+        }
+
+        .amount-caption {
+            font-size: 13px;
+            color: #4b5563;
+            margin-bottom: 6px;
+        }
+
+        .amount-value {
+            font-size: 46px;
+            line-height: 1;
+            font-weight: 800;
+        }
+
+        .amount-sub {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .docs { display: flex; flex-direction: column; gap: 8px; }
+
+        .doc {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .doc-left { min-width: 0; }
+
+        .doc-name {
+            font-size: 14px;
+            color: #111827;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .doc-meta {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .doc-btn {
+            border: 0;
+            background: transparent;
+            color: #1d4ed8;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .notice {
+            margin-top: 14px;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 14px;
+            border: 1px solid transparent;
+            display: none;
+        }
+
+        .notice.ok {
+            display: block;
+            background: var(--green-bg);
+            color: var(--green-text);
+            border-color: #bbf7d0;
+        }
+
+        .notice.bad {
+            display: block;
+            background: var(--red-bg);
+            color: var(--red-text);
+            border-color: #fecdd3;
+        }
+
+        .actions {
+            margin-top: 14px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .actions h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 220px;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .input,
+        textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 10px;
+            font: inherit;
+            background: #fff;
+        }
+
+        textarea { min-height: 84px; resize: vertical; }
+
+        .actions-row {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .btn {
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #fff;
+            padding: 0 14px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-danger {
+            border-color: #fecaca;
+            color: #b91c1c;
+            background: #fff5f5;
+        }
+
+        .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+        .error {
+            margin-top: 12px;
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: #991b1b;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+            display: none;
+        }
+
+        @media (max-width: 980px) {
+            h1 { font-size: 34px; }
+            .grid { grid-template-columns: 1fr; }
+            .actions-grid { grid-template-columns: 1fr; }
+            .row { grid-template-columns: 1fr; }
+            .nav { display: none; }
+            .actions-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <a class="brand" href="/cabinet/agent/index.html">
+            <span class="brand__icon"></span>
+            <span>ОСАГО Онлайн</span>
+        </a>
+        <nav class="nav">
+            <a href="/cabinet/agent/policies/index.html">Полисы</a>
+            <a href="/cabinet/agent/claims/index.html">Претензии</a>
+            <a href="/cabinet/agent/chats/index.html">Клиенты</a>
+            <a href="/cabinet/agent/reports/index.html">Отчеты</a>
+        </nav>
+        <button id="logoutBtn" class="user" type="button">Выйти</button>
+    </div>
+</header>
+
+<main class="main">
+    <div class="container">
+        <a class="back-link" href="/cabinet/agent/claims/index.html">← Назад к списку претензий</a>
+
+        <div class="topline">
+            <div>
+                <h1 id="title">Претензия</h1>
+                <p class="sub">Детальная информация и обработка страхового случая</p>
+            </div>
+            <span id="statusBadge" class="chip status-NEW">Новая</span>
+        </div>
+
+        <div id="errorBox" class="error"></div>
+
+        <section class="grid">
+            <article class="card">
+                <h3>Персональные данные клиента</h3>
+                <div class="field">
+                    <div class="field-label">ФИО клиента</div>
+                    <div id="clientName" class="field-value">—</div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="field">
+                        <div class="field-label">Телефон</div>
+                        <div id="contactPhone" class="field-value small">—</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Email</div>
+                        <div id="clientEmail" class="field-value small">—</div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="field-label">Доп. email</div>
+                    <div id="contactEmail" class="field-value small">—</div>
+                </div>
+            </article>
+
+            <article class="card">
+                <h3>Данные страхового полиса</h3>
+                <div class="row">
+                    <div class="field">
+                        <div class="field-label">Номер полиса</div>
+                        <div id="policyNumber" class="field-value">—</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Тип полиса</div>
+                        <div class="field-value"><span class="chip" style="background:#dbeafe;color:#1d4ed8;padding:3px 8px;">ОСАГО</span></div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="field-label">Транспортное средство</div>
+                    <div id="vehicleInfo" class="field-value small">—</div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="field">
+                        <div class="field-label">Создано</div>
+                        <div id="createdAt" class="field-value small">—</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Обновлено</div>
+                        <div id="updatedAt" class="field-value small">—</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card full">
+                <h3>Описание страхового случая</h3>
+                <div class="row">
+                    <div class="field">
+                        <div class="field-label">Дата происшествия</div>
+                        <div id="accidentAt" class="field-value">—</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Тип страхового случая</div>
+                        <div><span id="accidentType" class="event-type">—</span></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="field">
+                        <div class="field-label">Место происшествия</div>
+                        <div id="accidentPlace" class="field-value small">—</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Номер претензии</div>
+                        <div id="claimNumber" class="field-value">—</div>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="field-label">Подробное описание</div>
+                    <div id="description" class="field-value small">—</div>
+                </div>
+                <div class="field" style="margin-top:10px;">
+                    <div class="field-label">Решение агента</div>
+                    <div id="decisionComment" class="field-value small">—</div>
+                </div>
+            </article>
+
+            <article class="card">
+                <h3>Размер страхового возмещения</h3>
+                <div class="amount-box">
+                    <div class="amount-caption">Рассчитанная сумма возмещения</div>
+                    <div id="approvedAmount" class="amount-value">—</div>
+                    <div class="amount-sub">На основе оценки повреждений</div>
+                </div>
+            </article>
+
+            <article class="card">
+                <h3>Загруженные документы и фотографии</h3>
+                <div id="attachments" class="docs"></div>
+            </article>
+        </section>
+
+        <div id="statusNotice" class="notice"></div>
+
+        <section id="actionsCard" class="actions">
+            <h3>Действия по претензии</h3>
+            <div class="actions-grid">
+                <label>
+                    <div class="field-label">Комментарий</div>
+                    <textarea id="actionComment" placeholder="Причина запроса документов или комментарий к решению"></textarea>
+                </label>
+                <label>
+                    <div class="field-label">Сумма выплаты</div>
+                    <input id="approveAmountInput" class="input" type="number" min="0" step="0.01" placeholder="0.00">
+                </label>
+            </div>
+            <div class="actions-row">
+                <button id="takeBtn" class="btn btn-primary" type="button">Взять в работу</button>
+                <button id="needInfoBtn" class="btn" type="button">Запросить документы</button>
+                <button id="approveBtn" class="btn btn-primary" type="button">Одобрить</button>
+                <button id="rejectBtn" class="btn btn-danger" type="button">Отклонить</button>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script src="/cabinet/agent/claims/detail.js"></script>
+</body>
+</html>

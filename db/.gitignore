@@ -1,0 +1,10 @@
+# Local and temporary DB artifacts
+*.tmp
+*.log
+*.bak
+*.dump
+*.sql.gz
+
+# Optional local-only snapshots (keep canonical files tracked)
+schema.local.sql
+seed.local.sql

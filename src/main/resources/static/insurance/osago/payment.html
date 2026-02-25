@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Оплата полиса ОСАГО</title>
+    <style>
+        :root {
+            --bg: #f3f6fb;
+            --surface: #fff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+            --primary: #0b1220;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: var(--bg); color: var(--text); }
+        .container { width: min(860px, calc(100% - 24px)); margin: 24px auto 48px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .head { padding: 18px 20px; border-bottom: 1px solid var(--border); }
+        .steps { display: flex; gap: 16px; font-size: 13px; color: #64748b; }
+        .step { display: flex; align-items: center; gap: 8px; }
+        .dot { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; color: #fff; }
+        .done .dot { background: #16a34a; }
+        .active .dot { background: #2563eb; }
+        .body { padding: 20px; }
+        h1 { margin: 0 0 16px; font-size: 34px; }
+        h2 { margin: 18px 0 10px; font-size: 24px; }
+        .summary { border: 1px solid var(--border); background: #f8fafc; border-radius: 10px; padding: 14px; }
+        .row { display: flex; justify-content: space-between; gap: 16px; padding: 6px 0; font-size: 14px; }
+        .row .k { color: var(--muted); }
+        .row.total { border-top: 1px solid #e2e8f0; margin-top: 8px; padding-top: 10px; font-weight: 700; font-size: 28px; }
+        .grid { display: grid; gap: 12px; }
+        .grid-2 { grid-template-columns: 1fr 1fr; }
+        label { display: block; font-size: 13px; margin-bottom: 6px; color: #334155; }
+        input:not([type="checkbox"]) { width: 100%; height: 40px; border: 1px solid var(--border); border-radius: 10px; padding: 0 12px; font-size: 14px; }
+        .check {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            font-size: 14px;
+            color: #1f2937;
+            margin-bottom: 0;
+            border: 1px solid #dbe4f0;
+            background: #f8fbff;
+            border-radius: 10px;
+            padding: 10px 12px;
+            line-height: 1.35;
+        }
+        .check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 1px 0 0;
+            flex: 0 0 18px;
+            accent-color: #2563eb;
+        }
+        .safe { margin-top: 14px; border: 1px solid #bfdbfe; background: #eff6ff; border-radius: 10px; padding: 12px; font-size: 13px; color: #1e3a8a; }
+        .error, .success {
+            margin-bottom: 10px; padding: 12px; border-radius: 10px; font-size: 14px; display: none;
+        }
+        .error { border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; }
+        .success { border: 1px solid #86efac; background: #f0fdf4; color: #166534; }
+        .actions { border-top: 1px solid var(--border); padding: 16px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #fcfdff; }
+        .btn {
+            height: 42px; border-radius: 10px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 14px; font-weight: 700;
+        }
+        .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .btn:disabled { opacity: .6; cursor: not-allowed; }
+        @media (max-width: 760px) {
+            .grid-2, .actions { grid-template-columns: 1fr; }
+            h1 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+<main class="container">
+    <section class="card">
+        <div class="head">
+            <div class="steps">
+                <div class="step done"><span class="dot">1</span><span>Расчет</span></div>
+                <div class="step done"><span class="dot">2</span><span>Персональные данные</span></div>
+                <div class="step active"><span class="dot">3</span><span>Оплата</span></div>
+            </div>
+        </div>
+        <div class="body">
+            <div id="errorBox" class="error"></div>
+            <div id="successBox" class="success"></div>
+            <h1>Оплата</h1>
+
+            <div class="summary">
+                <h2 style="margin-top:0;">Сводка заказа</h2>
+                <div class="row"><span class="k">Транспортное средство:</span><span id="summaryVehicle">—</span></div>
+                <div class="row"><span class="k">Госномер:</span><span id="summaryReg">—</span></div>
+                <div class="row"><span class="k">Период страхования:</span><span id="summaryTerm">—</span></div>
+                <div class="row"><span class="k">Полис:</span><span id="summaryPolicy">—</span></div>
+                <div class="row total"><span>Итого к оплате:</span><span id="summaryAmount">—</span></div>
+            </div>
+
+            <h2>Данные банковской карты</h2>
+            <form id="paymentForm">
+                <div class="grid">
+                    <div>
+                        <label for="cardNumber">Номер карты</label>
+                        <input id="cardNumber" inputmode="numeric" placeholder="1234 5678 9012 3456" required />
+                    </div>
+                    <div class="grid grid-2">
+                        <div>
+                            <label for="cardExp">Срок действия (MM/YY)</label>
+                            <input id="cardExp" placeholder="12/25" required />
+                        </div>
+                        <div>
+                            <label for="cardCvc">CVC/CVV</label>
+                            <input id="cardCvc" inputmode="numeric" placeholder="123" required />
+                        </div>
+                    </div>
+                    <div>
+                        <label for="cardHolder">Имя владельца карты</label>
+                        <input id="cardHolder" placeholder="IVAN IVANOV" required />
+                    </div>
+                </div>
+                <label class="check"><input id="saveCard" type="checkbox" /> Сохранить карту для будущих платежей</label>
+            </form>
+
+            <div class="safe">Безопасная оплата: платежи проходят через защищенное соединение.</div>
+        </div>
+        <div class="actions">
+            <button id="backBtn" class="btn">Назад</button>
+            <button id="payBtn" class="btn btn-primary">Оплатить</button>
+        </div>
+    </section>
+</main>
+<script src="/insurance/osago/payment.js"></script>
+</body>
+</html>

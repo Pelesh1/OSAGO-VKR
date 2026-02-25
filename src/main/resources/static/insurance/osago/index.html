@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Калькулятор ОСАГО</title>
+    <style>
+        :root {
+            --bg: #eef2f7;
+            --surface: #ffffff;
+            --border: #dce3ee;
+            --text: #0f172a;
+            --muted: #64748b;
+            --blue: #2583f6;
+            --green: #22b35e;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: var(--text);
+            background: linear-gradient(180deg, #f7f9fc 0%, var(--bg) 100%);
+        }
+        .container {
+            width: min(980px, calc(100% - 28px));
+            margin: 24px auto 56px;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .head {
+            padding: 28px 28px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+        h1 {
+            margin: 0;
+            font-size: 46px;
+            letter-spacing: -.02em;
+        }
+        .steps {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            font-size: 14px;
+        }
+        .step {
+            position: relative;
+            color: #9ca8bb;
+            padding-top: 14px;
+        }
+        .step::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e2e8f0;
+            border-radius: 3px;
+        }
+        .step.active, .step.done {
+            color: var(--green);
+            font-weight: 700;
+        }
+        .step.active::before, .step.done::before {
+            background: var(--green);
+        }
+        .body {
+            padding: 24px 28px;
+            min-height: 580px;
+        }
+        .section { display: none; }
+        .section.active { display: block; }
+        h2 {
+            margin: 0 0 18px;
+            font-size: 38px;
+            letter-spacing: -.02em;
+        }
+        .hint-box {
+            margin-bottom: 20px;
+            border: 1px dashed #6fd99c;
+            background: #f2fff7;
+            color: #0f5132;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+        .grid {
+            display: grid;
+            gap: 12px;
+        }
+        .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        label {
+            display: block;
+            font-size: 12px;
+            color: #5b6a80;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+        input, select {
+            width: 100%;
+            height: 46px;
+            border: 1px solid #cfd8e6;
+            border-radius: 10px;
+            padding: 0 12px;
+            font-size: 16px;
+            color: var(--text);
+            background: #fff;
+        }
+        .inline-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 8px 0 12px;
+            margin-bottom: 0;
+            font-weight: 700;
+            border: 1px solid #dbe4f0;
+            background: #f8fbff;
+            border-radius: 10px;
+            padding: 10px 12px;
+            line-height: 1.35;
+        }
+        .inline-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 1px 0 0;
+            flex: 0 0 18px;
+            accent-color: #2563eb;
+        }
+        .soft-box {
+            margin-top: 16px;
+            border: 1px solid #d9e2f0;
+            border-radius: 14px;
+            padding: 16px;
+            background: #fbfdff;
+        }
+        .error {
+            display: none;
+            margin-bottom: 14px;
+            padding: 12px;
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: #991b1b;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        .actions {
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 18px 28px;
+            background: #fafcff;
+        }
+        .btn {
+            min-width: 160px;
+            height: 48px;
+            border-radius: 10px;
+            border: 1px solid #d6deea;
+            background: #fff;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .btn-primary {
+            background: var(--blue);
+            color: #fff;
+            border-color: var(--blue);
+        }
+        .btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+        .result-card {
+            border: 1px solid #d6deea;
+            border-radius: 14px;
+            padding: 18px;
+            background: #f8fbff;
+        }
+        .result-sum {
+            font-size: 44px;
+            font-weight: 800;
+            margin-top: 8px;
+        }
+        .muted {
+            color: var(--muted);
+            font-size: 14px;
+        }
+        .hidden { display: none; }
+        @media (max-width: 900px) {
+            .head, .body, .actions { padding-left: 16px; padding-right: 16px; }
+            h1 { font-size: 36px; }
+            h2 { font-size: 30px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .steps { font-size: 12px; }
+            .btn { min-width: 120px; }
+        }
+    </style>
+</head>
+<body>
+<main class="container">
+    <section class="card">
+        <div class="head">
+            <h1>Калькулятор ОСАГО</h1>
+            <div class="steps">
+                <div class="step active" data-step-marker="1">Автомобиль</div>
+                <div class="step" data-step-marker="2">Водители</div>
+                <div class="step" data-step-marker="3">Страхователь</div>
+                <div class="step" data-step-marker="4">Результат</div>
+            </div>
+        </div>
+
+        <div class="body">
+            <div id="errorBox" class="error"></div>
+
+            <section class="section active" data-step="1">
+                <h2>Автомобиль</h2>
+                <div class="grid grid-3">
+                    <div>
+                        <label for="brand">Марка</label>
+                        <input id="brand" placeholder="Audi" />
+                    </div>
+                    <div>
+                        <label for="model">Модель</label>
+                        <input id="model" placeholder="A3" />
+                    </div>
+                    <div>
+                        <label for="year">Год выпуска</label>
+                        <input id="year" type="number" min="1970" max="2099" placeholder="2022" />
+                    </div>
+                    <div>
+                        <label for="powerHp">Мощность двигателя (л.с.)</label>
+                        <input id="powerHp" type="number" min="1" value="150" />
+                    </div>
+                    <div>
+                        <label for="regNumber">Гос. номер</label>
+                        <input id="regNumber" placeholder="А 467 ОР 196" />
+                    </div>
+                    <div>
+                        <label for="vin">VIN</label>
+                        <input id="vin" placeholder="VZ390982D871X3171" />
+                    </div>
+                </div>
+                <div class="soft-box grid grid-2">
+                    <div>
+                        <label for="vehicleCategoryId">Категория ТС</label>
+                        <select id="vehicleCategoryId"></select>
+                    </div>
+                    <div>
+                        <label for="regionId">Регион регистрации</label>
+                        <select id="regionId"></select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" data-step="2">
+                <h2>Водители</h2>
+                <div class="hint-box">Ваши данные защищены шифрованием и обрабатываются по требованиям РФ</div>
+                <label class="inline-row">
+                    <input id="unlimitedDrivers" type="checkbox" />
+                    Без ограничений по водителям
+                </label>
+                <div id="driverFields" class="grid grid-3">
+                    <div>
+                        <label for="driverLastName">Фамилия</label>
+                        <input id="driverLastName" placeholder="Иванов" />
+                    </div>
+                    <div>
+                        <label for="driverFirstName">Имя</label>
+                        <input id="driverFirstName" placeholder="Иван" />
+                    </div>
+                    <div>
+                        <label for="driverMiddleName">Отчество</label>
+                        <input id="driverMiddleName" placeholder="Иванович" />
+                    </div>
+                    <div>
+                        <label for="driverBirthDate">Дата рождения</label>
+                        <input id="driverBirthDate" type="date" />
+                    </div>
+                    <div>
+                        <label for="driverLicenseNumber">Водительское удостоверение</label>
+                        <input id="driverLicenseNumber" placeholder="99 25 590925" />
+                    </div>
+                    <div>
+                        <label for="licenseIssuedDate">Дата начала стажа</label>
+                        <input id="licenseIssuedDate" type="date" />
+                    </div>
+                </div>
+                <div class="soft-box grid grid-2">
+                    <div style="grid-column: 1 / -1;">
+                        <label for="termMonths">Срок полиса</label>
+                        <select id="termMonths"></select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" data-step="3">
+                <h2>Страхователь</h2>
+                <div class="hint-box">Проверьте данные внимательно: они пойдут в оформление полиса</div>
+                <div class="grid grid-3">
+                    <div>
+                        <label for="insuredLastName">Фамилия</label>
+                        <input id="insuredLastName" placeholder="Иванов" />
+                    </div>
+                    <div>
+                        <label for="insuredFirstName">Имя</label>
+                        <input id="insuredFirstName" placeholder="Иван" />
+                    </div>
+                    <div>
+                        <label for="insuredMiddleName">Отчество</label>
+                        <input id="insuredMiddleName" placeholder="Иванович" />
+                    </div>
+                    <div>
+                        <label for="insuredBirthDate">Дата рождения</label>
+                        <input id="insuredBirthDate" type="date" />
+                    </div>
+                    <div>
+                        <label for="passportSeries">Серия и номер паспорта</label>
+                        <input id="passportSeries" placeholder="65 23 879791" />
+                    </div>
+                    <div>
+                        <label for="passportIssueDate">Дата выдачи паспорта</label>
+                        <input id="passportIssueDate" type="date" />
+                    </div>
+                    <div class="grid-item-wide" style="grid-column: 1 / span 2;">
+                        <label for="registrationAddress">Адрес регистрации</label>
+                        <input id="registrationAddress" placeholder="г. Екатеринбург, ул. ..." />
+                    </div>
+                    <div>
+                        <label for="apartment">Номер квартиры</label>
+                        <input id="apartment" placeholder="38" />
+                    </div>
+                </div>
+                <div class="soft-box grid grid-2">
+                    <div>
+                        <label for="email">Электронная почта</label>
+                        <input id="email" type="email" placeholder="mail@example.ru" />
+                    </div>
+                    <div>
+                        <label for="phone">Мобильный телефон</label>
+                        <input id="phone" placeholder="+7 999 123 45 67" />
+                    </div>
+                </div>
+                <label class="inline-row">
+                    <input id="consentPersonalData" type="checkbox" />
+                    Согласен с обработкой персональных данных
+                </label>
+                <label class="inline-row">
+                    <input id="consentAccuracy" type="checkbox" />
+                    Подтверждаю достоверность введенных данных
+                </label>
+            </section>
+
+            <section class="section" data-step="4">
+                <h2>Результат расчета</h2>
+                <div class="result-card">
+                    <div class="muted">Итоговая стоимость полиса ОСАГО</div>
+                    <div id="resultAmount" class="result-sum">—</div>
+                    <div id="resultInfo" class="muted"></div>
+                </div>
+                <div class="soft-box" style="margin-top:12px;">
+                    После продолжения вы перейдете к оформлению полиса. Если вы не авторизованы, сначала откроется вход.
+                </div>
+                <label class="inline-row" style="margin-top:14px;">
+                    <input id="agreeWithPrice" type="checkbox" />
+                    Меня устраивает стоимость, перейти к оформлению
+                </label>
+            </section>
+        </div>
+
+        <div class="actions">
+            <button id="backBtn" class="btn">Назад</button>
+            <button id="nextBtn" class="btn btn-primary">Продолжить</button>
+        </div>
+    </section>
+</main>
+
+<script src="/insurance/osago/osago.js"></script>
+</body>
+</html>

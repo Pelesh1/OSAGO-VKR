@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Оформление ОСАГО</title>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: var(--bg); color: var(--text); }
+        .container { width: min(980px, calc(100% - 40px)); margin: 0 auto; }
+        .header { background: var(--surface); border-bottom: 1px solid var(--border); }
+        .header__inner { height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .brand { text-decoration: none; color: var(--text); font-weight: 700; }
+        .nav { display: flex; gap: 24px; }
+        .nav a { text-decoration: none; color: #374151; font-size: 14px; }
+        .main { padding: 30px 0 60px; }
+        .card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+        h1 { margin: 0 0 14px; font-size: 34px; }
+        h2 { margin: 18px 0 10px; font-size: 22px; }
+        .small { color: var(--muted); font-size: 13px; }
+        .grid { display: grid; gap: 12px; }
+        .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        label { display: block; font-size: 13px; margin-bottom: 6px; color: #374151; }
+        input:not([type="checkbox"]) {
+            width: 100%;
+            height: 40px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0 12px;
+            font-size: 14px;
+        }
+        .calc-info {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+        .checks { display: grid; gap: 10px; margin-top: 10px; }
+        .check {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            color: #1f2937;
+            margin-bottom: 0;
+            border: 1px solid #dbe4f0;
+            background: #f8fbff;
+            border-radius: 10px;
+            padding: 10px 12px;
+            line-height: 1.35;
+        }
+        .check input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin: 1px 0 0;
+            flex: 0 0 18px;
+            accent-color: #2563eb;
+        }
+        .sum {
+            margin-top: 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+            background: #f8fafc;
+        }
+        .sum__value { margin-top: 6px; font-size: 34px; font-weight: 700; }
+        .actions { margin-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .btn {
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary { background: #111827; border-color: #111827; color: #fff; }
+        .btn:disabled { opacity: .6; cursor: not-allowed; }
+        .error, .success {
+            margin-bottom: 12px; padding: 12px 14px; border-radius: 10px; font-size: 14px; display: none;
+        }
+        .error { border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; }
+        .success { border: 1px solid #86efac; background: #f0fdf4; color: #166534; }
+        @media (max-width: 900px) {
+            .container { width: min(980px, calc(100% - 24px)); }
+            h1 { font-size: 28px; }
+            .grid-2, .actions { grid-template-columns: 1fr; }
+            .nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <a class="brand" href="/">ОСАГО Онлайн</a>
+        <nav class="nav">
+            <a href="/insurance/osago/">ОСАГО</a>
+            <a href="/insurance/kasko/index.html">КАСКО</a>
+            <a href="/cabinet/client/index.html">Личный кабинет</a>
+        </nav>
+    </div>
+</header>
+
+<main class="main">
+    <div class="container">
+        <section class="card">
+            <h1>Персональные данные</h1>
+            <div id="errorBox" class="error"></div>
+            <div id="successBox" class="success"></div>
+
+            <div id="calcInfo" class="calc-info"></div>
+
+            <form id="checkoutForm">
+                <h2>Данные автомобиля</h2>
+                <div class="grid grid-2">
+                    <div>
+                        <label for="brand">Марка</label>
+                        <input id="brand" required />
+                    </div>
+                    <div>
+                        <label for="model">Модель</label>
+                        <input id="model" />
+                    </div>
+                    <div>
+                        <label for="vin">VIN</label>
+                        <input id="vin" />
+                    </div>
+                    <div>
+                        <label for="regNumber">Госномер</label>
+                        <input id="regNumber" />
+                    </div>
+                </div>
+
+                <h2>Персональные данные страхователя</h2>
+                <div class="grid grid-2">
+                    <div>
+                        <label for="birthDate">Дата рождения</label>
+                        <input id="birthDate" type="date" required />
+                    </div>
+                    <div>
+                        <label for="passportSeries">Серия паспорта</label>
+                        <input id="passportSeries" required />
+                    </div>
+                    <div>
+                        <label for="passportNumber">Номер паспорта</label>
+                        <input id="passportNumber" required />
+                    </div>
+                    <div>
+                        <label for="passportIssueDate">Дата выдачи паспорта</label>
+                        <input id="passportIssueDate" type="date" />
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <label for="passportIssuer">Орган, выдавший паспорт</label>
+                        <input id="passportIssuer" />
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <label for="registrationAddress">Адрес регистрации</label>
+                        <input id="registrationAddress" />
+                    </div>
+                </div>
+
+                <h2>Данные водительского удостоверения</h2>
+                <div class="grid grid-2">
+                    <div>
+                        <label for="driverLicenseNumber">Номер водительского удостоверения</label>
+                        <input id="driverLicenseNumber" required />
+                    </div>
+                    <div>
+                        <label for="licenseIssuedDate">Дата выдачи удостоверения</label>
+                        <input id="licenseIssuedDate" type="date" />
+                    </div>
+                </div>
+
+                <h2>Параметры полиса</h2>
+                <div class="grid grid-2">
+                    <div>
+                        <label for="startDate">Дата начала действия</label>
+                        <input id="startDate" type="date" required />
+                    </div>
+                </div>
+
+                <div class="checks">
+                    <label class="check"><input id="consentAccuracy" type="checkbox" required /> Я подтверждаю, что предоставленные данные верны</label>
+                    <label class="check"><input id="consentPersonalData" type="checkbox" required /> Я согласен на обработку персональных данных</label>
+                </div>
+
+                <div class="sum">
+                    <div>Итоговая стоимость полиса ОСАГО</div>
+                    <div id="sumValue" class="sum__value">—</div>
+                </div>
+
+                <div class="actions">
+                    <button id="backBtn" type="button" class="btn">Назад к расчету</button>
+                    <button id="payBtn" type="submit" class="btn btn-primary">Перейти к оплате</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+
+<script src="/insurance/osago/checkout.js"></script>
+</body>
+</html>

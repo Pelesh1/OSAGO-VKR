@@ -1,0 +1,59 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Р РµРіРёСЃС‚СЂР°С†РёСЏ</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* РјРёРЅРёРјР°Р»СЊРЅРѕ, С‡С‚РѕР±С‹ Р±С‹Р»Рѕ РїРѕС…РѕР¶Рµ РЅР° РјР°РєРµС‚ */
+        body { margin:0; font-family: Arimo, Arial, sans-serif; background:#F8FAFC; }
+        .wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px; }
+        .card { width:480px; background:#fff; border-radius:10px; padding:32px; box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06); }
+        h1 { margin:0 0 24px 0; font-size:24px; font-weight:400; color:#0F172B; }
+        label { display:block; font-size:14px; margin:16px 0 8px; color:#0A0A0A; }
+        input { width:100%; height:36px; border:0; border-radius:8px; padding:4px 12px; background:#F3F3F5; }
+        button { width:100%; height:40px; border:0; border-radius:8px; background:#030213; color:#fff; margin-top:24px; cursor:pointer; }
+        .link { display:block; text-align:center; margin-top:16px; color:#0A0A0A; text-decoration:none; }
+        .err { margin-top:12px; color:#B91C1C; font-size:14px; display:none; }
+        .ok { margin-top:12px; color:#166534; font-size:14px; display:none; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <h1>Р РµРіРёСЃС‚СЂР°С†РёСЏ</h1>
+
+        <form id="regForm">
+            <label>РРјСЏ</label>
+            <input id="firstName" required placeholder="РРІР°РЅ">
+
+            <label>Р¤Р°РјРёР»РёСЏ</label>
+            <input id="lastName" required placeholder="РџРµС‚СЂРѕРІ">
+
+            <label>РћС‚С‡РµСЃС‚РІРѕ</label>
+            <input id="middleName" placeholder="РђР»РµРєСЃР°РЅРґСЂРѕРІРёС‡">
+
+            <label>Р­Р»РµРєС‚СЂРѕРЅРЅР°СЏ РїРѕС‡С‚Р°</label>
+            <input id="email" type="email" required placeholder="example@mail.com">
+
+            <label>РџР°СЂРѕР»СЊ</label>
+            <input id="password" type="password" required placeholder="РЎРѕР·РґР°Р№С‚Рµ РїР°СЂРѕР»СЊ">
+
+            <label>РџРѕРґС‚РІРµСЂРґРёС‚Рµ РїР°СЂРѕР»СЊ</label>
+            <input id="password2" type="password" required placeholder="РџРѕРІС‚РѕСЂРёС‚Рµ РїР°СЂРѕР»СЊ">
+
+            <button type="submit">Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°С‚СЊСЃСЏ</button>
+
+            <div id="err" class="err"></div>
+            <div id="ok" class="ok"></div>
+
+            <a class="link" href="/login/index.html">РќР°Р·Р°Рґ Рє РІС…РѕРґСѓ</a>
+        </form>
+    </div>
+</div>
+
+<script src="/register/register.js"></script>
+</body>
+</html>
+

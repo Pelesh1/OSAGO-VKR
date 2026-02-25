@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Заявка на полис - Кабинет агента</title>
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --text: #0f172a;
+            --muted: #64748b;
+            --primary: #0a1021;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: var(--bg); color: var(--text); }
+        .container { width: min(1060px, calc(100% - 24px)); margin: 0 auto; }
+        .header { background: #fff; border-bottom: 1px solid var(--border); }
+        .header__inner { height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .btn { height: 36px; border-radius: 8px; border: 1px solid var(--border); background: #fff; padding: 0 14px; cursor: pointer; }
+        .btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
+        .btn-danger { border-color: #fecaca; color: #991b1b; background: #fff5f5; }
+        .main { padding: 22px 0 38px; }
+        .topline { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+        h1 { margin: 0; font-size: 32px; }
+        .sub { margin: 8px 0 0; color: var(--muted); }
+        .status { font-size: 12px; border-radius: 999px; padding: 5px 10px; display: inline-block; }
+        .status-NEW { background: #dbeafe; color: #1d4ed8; }
+        .status-IN_REVIEW { background: #ede9fe; color: #6d28d9; }
+        .status-NEED_INFO { background: #ffedd5; color: #c2410c; }
+        .status-APPROVED { background: #dcfce7; color: #166534; }
+        .status-PAYMENT_PENDING { background: #e0f2fe; color: #0369a1; }
+        .status-PAID { background: #dcfce7; color: #14532d; }
+        .status-REJECTED { background: #fee2e2; color: #991b1b; }
+        .error {
+            margin-top: 12px;
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: #991b1b;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+            display: none;
+        }
+        .grid { margin-top: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+        .card h3 { margin: 0 0 10px; font-size: 18px; }
+        .line { margin: 6px 0; color: #334155; }
+        .label { color: #64748b; margin-right: 6px; }
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <strong>ОСАГО Онлайн • Агент</strong>
+        <div style="display:flex; gap:8px;">
+            <button id="backBtn" class="btn" type="button">К списку</button>
+            <button id="logoutBtn" class="btn" type="button">Выйти</button>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+    <div class="container">
+        <div class="topline">
+            <div>
+                <h1 id="title">Заявка на полис</h1>
+                <p id="subtitle" class="sub">Загрузка...</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span id="statusBadge" class="status">—</span>
+                <button id="takeBtn" class="btn btn-primary" type="button">Взять в работу</button>
+            </div>
+        </div>
+
+        <div id="errorBox" class="error"></div>
+
+        <section class="grid">
+            <article class="card" style="grid-column: 1 / -1;">
+                <h3>Действия агента</h3>
+                <label>
+                    <div class="line"><span class="label">Комментарий</span></div>
+                    <textarea id="actionComment" style="width:100%;min-height:92px;border:1px solid #cbd5e1;border-radius:10px;padding:10px;font:inherit;resize:vertical;" placeholder="Причина запроса доп. данных или отклонения"></textarea>
+                </label>
+                <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;">
+                    <button id="needInfoBtn" class="btn" type="button">Запросить данные</button>
+                    <button id="approveBtn" class="btn btn-primary" type="button">Одобрить</button>
+                    <button id="rejectBtn" class="btn btn-danger" type="button">Отклонить</button>
+                </div>
+            </article>
+
+            <article class="card">
+                <h3>Клиент</h3>
+                <div class="line"><span class="label">ФИО:</span><span id="clientName">—</span></div>
+                <div class="line"><span class="label">Email:</span><span id="clientEmail">—</span></div>
+                <div class="line"><span class="label">Дата рождения:</span><span id="insuredBirthDate">—</span></div>
+                <div class="line"><span class="label">Паспорт:</span><span id="passport">—</span></div>
+                <div class="line"><span class="label">Адрес:</span><span id="registrationAddress">—</span></div>
+            </article>
+            <article class="card">
+                <h3>Водитель</h3>
+                <div class="line"><span class="label">Удостоверение:</span><span id="driverLicenseNumber">—</span></div>
+                <div class="line"><span class="label">Дата выдачи:</span><span id="licenseIssuedDate">—</span></div>
+            </article>
+            <article class="card">
+                <h3>Автомобиль</h3>
+                <div class="line"><span class="label">Марка/модель:</span><span id="vehicleName">—</span></div>
+                <div class="line"><span class="label">Госномер:</span><span id="regNumber">—</span></div>
+                <div class="line"><span class="label">VIN:</span><span id="vin">—</span></div>
+                <div class="line"><span class="label">Категория:</span><span id="vehicleCategory">—</span></div>
+                <div class="line"><span class="label">Регион:</span><span id="region">—</span></div>
+                <div class="line"><span class="label">Мощность:</span><span id="powerHp">—</span></div>
+            </article>
+            <article class="card">
+                <h3>Полис</h3>
+                <div class="line"><span class="label">Номер:</span><span id="policyNumber">—</span></div>
+                <div class="line"><span class="label">Тип:</span><span id="policyType">—</span></div>
+                <div class="line"><span class="label">Статус полиса:</span><span id="policyStatus">—</span></div>
+                <div class="line"><span class="label">Период:</span><span id="policyPeriod">—</span></div>
+                <div class="line"><span class="label">Срок:</span><span id="termMonths">—</span></div>
+                <div class="line"><span class="label">Премия:</span><span id="premiumAmount">—</span></div>
+            </article>
+            <article class="card" style="grid-column: 1 / -1;">
+                <h3>Комментарий по заявке</h3>
+                <div id="applicationComment" class="line">—</div>
+                <div class="line"><span class="label">Создано:</span><span id="createdAt">—</span></div>
+                <div class="line"><span class="label">Обновлено:</span><span id="updatedAt">—</span></div>
+            </article>
+        </section>
+    </div>
+</main>
+
+<script src="/cabinet/agent/applications/detail.js"></script>
+</body>
+</html>

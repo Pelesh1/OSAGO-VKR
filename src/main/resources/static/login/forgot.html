@@ -1,0 +1,55 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Восстановление пароля</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body { margin:0; font-family: Arimo, Arial, sans-serif; background:#F8FAFC; }
+        .wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px; }
+        .card { width:420px; background:#fff; border-radius:10px; padding:32px; box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06); }
+        h1 { margin:0 0 12px 0; font-size:24px; font-weight:400; color:#0F172B; }
+        .sub { margin:0 0 20px; color:#45556C; font-size:14px; }
+        label { display:block; font-size:14px; margin:14px 0 8px; color:#0A0A0A; }
+        input { width:100%; height:36px; border:0; border-radius:8px; padding:4px 12px; background:#F3F3F5; }
+        button { width:100%; height:40px; border:0; border-radius:8px; background:#2563EB; color:#fff; margin-top:22px; cursor:pointer; }
+        .err { margin-top:12px; color:#B91C1C; font-size:14px; display:none; }
+        .ok { margin-top:12px; color:#047857; font-size:14px; display:none; }
+        .row { margin-top:14px; display:flex; justify-content:space-between; gap:12px; }
+        .row a { color:#1D4ED8; text-decoration:none; font-size:14px; }
+        .row a:hover { text-decoration:underline; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <h1>Восстановление пароля</h1>
+        <p class="sub">Введите email и новый пароль для входа.</p>
+
+        <form id="resetForm">
+            <label>Email</label>
+            <input id="email" type="email" required placeholder="example@mail.com">
+
+            <label>Новый пароль</label>
+            <input id="newPassword" type="password" minlength="6" required placeholder="Новый пароль">
+
+            <label>Подтверждение пароля</label>
+            <input id="confirmPassword" type="password" minlength="6" required placeholder="Повторите пароль">
+
+            <button type="submit">Сменить пароль</button>
+
+            <div id="err" class="err"></div>
+            <div id="ok" class="ok"></div>
+
+            <div class="row">
+                <a href="/login/index.html">Назад ко входу</a>
+                <a href="/">На главную</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/login/forgot.js"></script>
+</body>
+</html>

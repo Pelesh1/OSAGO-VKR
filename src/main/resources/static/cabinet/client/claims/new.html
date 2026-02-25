@@ -1,0 +1,383 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Подача заявления на страховое возмещение</title>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+            --primary: #111827;
+            --primary-soft: #2563eb;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+        }
+        .container {
+            width: min(980px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+        .header__inner {
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .brand {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: 18px;
+        }
+        .nav { display: flex; gap: 26px; }
+        .nav a { text-decoration: none; color: #374151; font-size: 14px; }
+        .cabinet-btn {
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            height: 34px;
+            padding: 0 12px;
+            background: #fff;
+            cursor: pointer;
+        }
+        main { padding: 28px 0 54px; }
+        h1 {
+            margin: 0;
+            font-size: 40px;
+            line-height: 1.14;
+        }
+        .subtitle {
+            margin: 10px 0 18px;
+            color: var(--muted);
+            font-size: 15px;
+        }
+        .form {
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 12px;
+            padding: 18px;
+        }
+        .section {
+            border-top: 1px solid #f1f5f9;
+            padding: 16px 0;
+        }
+        .section:first-child {
+            border-top: 0;
+            padding-top: 0;
+        }
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .step {
+            width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 12px;
+            font-weight: 700;
+            display: grid;
+            place-items: center;
+            flex: 0 0 auto;
+        }
+        .section-title { margin: 0; font-size: 16px; font-weight: 700; }
+        .grid { display: grid; gap: 12px; }
+        .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        label { display: block; font-size: 13px; color: #374151; margin-bottom: 5px; }
+        input:not([type="checkbox"]):not([type="file"]), select, textarea {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            padding: 10px 12px;
+            font-family: inherit;
+            background: #fff;
+            color: #111827;
+        }
+        input:not([type="checkbox"]):not([type="file"]):focus, select:focus, textarea:focus {
+            outline: 2px solid #bfdbfe;
+            border-color: #93c5fd;
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .hint { margin-top: 4px; color: #9ca3af; font-size: 12px; }
+
+        .dropzone {
+            border: 1px dashed #cbd5e1;
+            border-radius: 10px;
+            background: #f8fafc;
+            padding: 16px;
+            color: #64748b;
+            font-size: 13px;
+            cursor: pointer;
+            transition: .15s ease;
+        }
+        .dropzone:hover,
+        .dropzone.dragover {
+            border-color: #60a5fa;
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+        .file-list {
+            margin-top: 8px;
+            display: grid;
+            gap: 6px;
+        }
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 6px 10px;
+            font-size: 13px;
+            background: #fff;
+        }
+        .file-name {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .file-remove {
+            border: 0;
+            background: transparent;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .checks {
+            display: grid;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .check {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 14px;
+            color: #374151;
+            margin: 0;
+        }
+        .check input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            flex: 0 0 auto;
+            margin-top: 2px;
+        }
+        .warn {
+            margin-top: 10px;
+            border: 1px solid #fde68a;
+            background: #fffbeb;
+            color: #92400e;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 13px;
+        }
+        .actions {
+            margin-top: 16px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: nowrap;
+            align-items: center;
+        }
+        .btn-primary, .btn-ghost {
+            height: 38px;
+            border-radius: 10px;
+            padding: 0 16px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary {
+            border: 0;
+            background: var(--primary);
+            color: #fff;
+        }
+        .btn-primary:disabled { opacity: .6; cursor: not-allowed; }
+        .btn-ghost {
+            border: 1px solid var(--border);
+            background: #fff;
+            color: #111827;
+        }
+
+        .error, .success {
+            margin: 0 0 14px;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 14px;
+            display: none;
+        }
+        .error { border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; }
+        .success { border: 1px solid #86efac; background: #f0fdf4; color: #166534; }
+
+        .invalid {
+            border-color: #fca5a5 !important;
+            background: #fff1f2 !important;
+        }
+
+        @media (max-width: 900px) {
+            .container { width: min(980px, calc(100% - 24px)); }
+            h1 { font-size: 32px; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .nav { display: none; }
+            .actions { flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <a class="brand" href="/">ОСАГО Онлайн</a>
+        <nav class="nav">
+            <a href="/cabinet/client/policies/index.html">Полисы</a>
+            <a href="/cabinet/client/claims/index.html">Заявления</a>
+            <a href="/cabinet/client/chat/index.html">Поддержка</a>
+            <a href="/about/index.html">О компании</a>
+        </nav>
+        <button id="cabinetBtn" class="cabinet-btn" type="button">Личный кабинет</button>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <h1>Подача заявления на страховое возмещение</h1>
+        <p class="subtitle">Заполните все необходимые поля для подачи заявления по ОСАГО</p>
+
+        <div id="errorBox" class="error"></div>
+        <div id="successBox" class="success"></div>
+
+        <form id="claimForm" class="form" novalidate>
+            <section class="section">
+                <div class="section-head">
+                    <span class="step">1</span>
+                    <h3 class="section-title">Выбор полиса</h3>
+                </div>
+                <label for="policyId">Выберите страховой полис</label>
+                <select id="policyId" name="policyId" required></select>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <span class="step">2</span>
+                    <h3 class="section-title">Информация об аварии</h3>
+                </div>
+                <div class="grid grid-2">
+                    <div>
+                        <label for="accidentDate">Дата аварии</label>
+                        <input id="accidentDate" type="date" required />
+                    </div>
+                    <div>
+                        <label for="accidentTime">Время аварии</label>
+                        <input id="accidentTime" type="time" required />
+                    </div>
+                </div>
+                <div style="margin-top:12px;">
+                    <label for="accidentPlace">Место происшествия</label>
+                    <input id="accidentPlace" type="text" maxlength="500" placeholder="Укажите адрес или местоположение аварии" required />
+                </div>
+                <div style="margin-top:12px;">
+                    <label for="accidentType">Тип аварии</label>
+                    <select id="accidentType" required>
+                        <option value="COLLISION">Столкновение</option>
+                        <option value="TREE_FALL">Падение дерева</option>
+                        <option value="OBSTACLE_HIT">Наезд на препятствие</option>
+                        <option value="THEFT">Угон</option>
+                        <option value="OTHER">Другое</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <span class="step">3</span>
+                    <h3 class="section-title">Описание происшествия</h3>
+                </div>
+                <label for="description">Опишите обстоятельства аварии</label>
+                <textarea id="description" maxlength="5000" placeholder="Подробно опишите, как произошла авария, какие повреждения получил автомобиль, были ли свидетели..." required></textarea>
+                <div class="hint">Минимум 20 символов. Чем подробнее описание, тем быстрее обработка.</div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <span class="step">4</span>
+                    <h3 class="section-title">Приложения</h3>
+                </div>
+
+                <label>Фотографии повреждений</label>
+                <input id="damageFilesInput" type="file" accept="image/*" multiple hidden />
+                <div id="damageDropzone" class="dropzone" role="button" tabindex="0">
+                    Нажмите для загрузки или перетащите фото (jpg, jpeg, png, webp), до 20MB на файл
+                </div>
+                <div id="damageFileList" class="file-list"></div>
+
+                <div style="height:10px;"></div>
+
+                <label>Документы по аварии</label>
+                <input id="accidentDocsInput" type="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" multiple hidden />
+                <div id="docsDropzone" class="dropzone" role="button" tabindex="0">
+                    Нажмите для загрузки или перетащите документы (pdf, doc, docx, jpg, png), до 20MB на файл
+                </div>
+                <div id="docsFileList" class="file-list"></div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <span class="step">5</span>
+                    <h3 class="section-title">Контактная информация</h3>
+                </div>
+                <div class="grid grid-2">
+                    <div>
+                        <label for="contactPhone">Номер телефона</label>
+                        <input id="contactPhone" type="tel" value="+7" required />
+                        <div class="hint">Формат: +7XXXXXXXXXX</div>
+                    </div>
+                    <div>
+                        <label for="contactEmail">Адрес электронной почты</label>
+                        <input id="contactEmail" type="email" placeholder="example@mail.ru" />
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <div class="section-head">
+                    <span class="step">6</span>
+                    <h3 class="section-title">Подтверждение</h3>
+                </div>
+                <div class="checks">
+                    <label class="check"><input id="consentAccuracy" type="checkbox" required /> Я подтверждаю, что предоставленная информация верна</label>
+                    <label class="check"><input id="consentPersonalData" type="checkbox" required /> Я согласен на обработку персональных данных</label>
+                </div>
+                <div class="warn">Для отправки заявления необходимо подтвердить оба пункта.</div>
+            </section>
+
+            <div class="actions">
+                <button id="submitBtn" type="submit" class="btn-primary">Отправить заявку</button>
+                <button id="cancelBtn" type="button" class="btn-ghost">Отмена / Назад в личный кабинет</button>
+            </div>
+        </form>
+    </div>
+</main>
+
+<script src="/cabinet/client/claims/new.js"></script>
+</body>
+</html>
+

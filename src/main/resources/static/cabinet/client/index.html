@@ -1,0 +1,161 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+        body { margin:0; font-family: Arimo, Arial, sans-serif; background:#F8FAFC; color:#0A0A0A; }
+        .container { max-width: 1136px; margin: 0 auto; padding: 0 24px; }
+        .header { background:#fff; border-bottom:1px solid #E5E7EB; }
+        .header__inner { height:64px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+        .brand { display:flex; align-items:center; gap:10px; color:#0A0A0A; user-select:none; }
+        .brand__box { width:48px; height:48px; display:grid; place-items:center; background:#E2E8F0; border-radius:4px; font-weight:700; color:#45556C; }
+        .brand__text { font-weight:700; font-size:18px; letter-spacing:.02em; }
+        .nav { display:flex; gap:24px; }
+        .nav a { text-decoration:none; color:#314158; font-size:16px; }
+        .user { display:flex; align-items:center; gap:12px; }
+        .avatar { width:40px; height:40px; border-radius:9999px; background:#F1F5F9; display:grid; place-items:center; cursor:default; border:1px solid #E5E7EB; user-select:none; font-size:18px; }
+        .btn { height:36px; padding:0 14px; border-radius:10px; border:0; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; white-space:nowrap; line-height:1; }
+        .btn--dark { background:#030213; color:#fff; }
+        .btn--ghost { background:#F1F5F9; color:#0A0A0A; }
+        .btn--full { width:100%; }
+        .main { padding:48px 0; }
+        h1 { margin:0; font-size:36px; font-weight:400; color:#0F172B; }
+        .sub { margin:8px 0 0; color:#45556C; font-size:18px; }
+        .section { margin-top:32px; }
+        .section__top { display:flex; justify-content:space-between; align-items:center; }
+        .badge { background:#E7000B; color:#fff; font-weight:700; font-size:12px; padding:4px 8px; border-radius:9999px; }
+        .noti { margin-top:16px; display:flex; flex-direction:column; gap:16px; }
+        .noti__item { display:flex; align-items:flex-start; gap:16px; padding:16px; border-radius:10px; border:1px solid; background:#fff; }
+        .noti__icon { width:40px; height:40px; border-radius:10px; display:grid; place-items:center; }
+        .noti__content { flex:1; }
+        .noti__title { margin:0; font-size:16px; font-weight:400; color:#0F172B; }
+        .noti__desc { margin:4px 0 0; font-size:14px; color:#45556C; }
+        .noti__actions { display:flex; gap:8px; align-items:center; }
+        .xbtn { width:28px; height:28px; border-radius:8px; border:1px solid #E5E7EB; background:#fff; cursor:pointer; }
+        .grid { margin-top:24px; display:grid; grid-template-columns: repeat(3, 1fr); gap:24px; }
+        .card { background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:24px; display:flex; flex-direction:column; }
+        .card__icon { width:56px; height:56px; border-radius:10px; display:grid; place-items:center; margin-bottom:16px; }
+        .card__title { margin:0; font-size:20px; font-weight:400; color:#0F172B; min-height:56px; }
+        .card__desc { margin:8px 0 16px; font-size:14px; color:#45556C; line-height:23px; min-height:46px; }
+        .card .btn--full { margin-top:auto; }
+        .wide { grid-column: span 2; }
+        .summary { margin-top:24px; background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:24px; }
+        .summary__grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:16px; margin-top:16px; }
+        .metric { text-align:center; }
+        .metric__num { font-size:36px; font-weight:700; margin:0; }
+        .metric__label { margin:6px 0 0; font-size:14px; color:#45556C; }
+        .muted { color:#45556C; }
+        @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } .wide { grid-column: auto; } .nav { display:none; } }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <span class="brand">
+            <span class="brand__box">🛡️</span>
+            <span class="brand__text">ОСАГО Онлайн</span>
+        </span>
+
+        <nav class="nav">
+            <a href="/cabinet/client/policies/index.html">Полисы</a>
+            <a href="/cabinet/client/claims/index.html">Заявления</a>
+            <a href="/cabinet/client/chat/index.html">Поддержка</a>
+            <a href="/about/index.html">О компании</a>
+        </nav>
+
+        <div class="user">
+            <span id="userShort" class="muted"></span>
+            <button id="logoutBtn" class="btn btn--ghost">Выйти</button>
+            <span class="avatar" aria-hidden="true" title="Статус: клиент">👤</span>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+    <div class="container">
+        <h1>Личный кабинет</h1>
+        <p class="sub">Управление полисами и заявлениями</p>
+        <section class="section">
+            <div class="section__top">
+                <h2 style="margin:0; font-size:24px; font-weight:400; color:#0F172B;">Уведомления</h2>
+                <span id="notificationsBadge" class="badge">0</span>
+            </div>
+            <div id="notificationsList" class="noti"></div>
+        </section>
+
+        <section class="section">
+            <div class="grid">
+                <div class="card">
+                    <div class="card__icon" style="background:#EFF6FF;">📄</div>
+                    <p class="card__title">Мои полисы</p>
+                    <p class="card__desc">Просмотрите все ваши активные и завершенные страховые полисы</p>
+                    <a class="btn btn--dark btn--full" href="/cabinet/client/policies/index.html">Просмотреть полисы</a>
+                </div>
+
+                <div class="card">
+                    <div class="card__icon" style="background:#F0FDF4;">💰</div>
+                    <p class="card__title">Страховые выплаты</p>
+                    <p class="card__desc">Отслеживайте статус ваших заявлений на страховое возмещение</p>
+                    <a class="btn btn--dark btn--full" href="/cabinet/client/claims/index.html">Отслеживание статуса</a>
+                </div>
+
+                <div class="card">
+                    <div class="card__icon" style="background:#FAF5FF;">✈️</div>
+                    <p class="card__title">Подать заявление</p>
+                    <p class="card__desc">Создайте новую заявку на страховое возмещение после ДТП</p>
+                    <a class="btn btn--dark btn--full" href="/cabinet/client/claims/new.html">Отправить новую заявку</a>
+                </div>
+
+                <div class="card">
+                    <div class="card__icon" style="background:#FFF7ED;">🧮</div>
+                    <p class="card__title">Рассчитать и купить полис</p>
+                    <p class="card__desc">Используйте калькулятор для расчета стоимости ОСАГО</p>
+                    <a class="btn btn--dark btn--full" href="/insurance/osago/">Оформить ОСАГО</a>
+                </div>
+
+                <div class="card">
+                    <div class="card__icon" style="background:#EEF2FF;">💬</div>
+                    <p class="card__title">Связаться со страховым агентом</p>
+                    <p class="card__desc">Получите консультацию от наших специалистов онлайн</p>
+                    <a class="btn btn--dark btn--full" href="/cabinet/client/chat/index.html">Открыть чат</a>
+                </div>
+
+                <div class="card wide">
+                    <div class="card__icon" style="background:#FEF2F2;">☎️</div>
+                    <p class="card__title">Помощь на дороге</p>
+                    <p class="card__desc">Срочная помощь при ДТП: свяжитесь с уполномоченным или запросите консультацию</p>
+                    <div style="display:flex; gap:16px; flex-wrap:wrap;">
+                        <button id="callAgentBtn" class="btn" style="background:#E7000B; color:#fff;">Позвонить уполномоченному</button>
+                        <button id="consultationBtn" class="btn btn--ghost">Запросить консультацию</button>
+                    </div>
+                    <p id="supportPhoneHint" class="card__desc" style="margin-top:12px; display:none;"></p>
+                </div>
+            </div>
+
+            <div class="summary">
+                <div style="font-size:24px; font-weight:400; color:#0F172B;">Сводная информация</div>
+                <div class="summary__grid">
+                    <div class="metric">
+                        <p id="summaryPolicies" class="metric__num" style="color:#155DFC;">0</p>
+                        <p class="metric__label">Действующих полисов</p>
+                    </div>
+                    <div class="metric">
+                        <p id="summaryClaimsTotal" class="metric__num" style="color:#00A63E;">0</p>
+                        <p class="metric__label">Поданных заявок</p>
+                    </div>
+                    <div class="metric">
+                        <p id="summaryClaimsInProgress" class="metric__num" style="color:#F54900;">0</p>
+                        <p class="metric__label">Заявок в обработке</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script src="/cabinet/client/client.js"></script>
+</body>
+</html>

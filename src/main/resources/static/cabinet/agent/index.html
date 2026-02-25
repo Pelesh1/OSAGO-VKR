@@ -1,0 +1,150 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Кабинет страхового агента</title>
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --surface: #fff;
+            --border: #e5e7eb;
+            --text: #0f172a;
+            --muted: #64748b;
+            --primary: #0a1021;
+        }
+        * { box-sizing: border-box; }
+        body { margin:0; font-family: Arial, sans-serif; background: var(--bg); color: var(--text); }
+        .container { width:min(1260px, calc(100% - 24px)); margin: 0 auto; }
+        .header { background:#fff; border-bottom:1px solid var(--border); }
+        .header__inner { height:60px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+        .brand { display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--text); font-weight:700; }
+        .brand__icon { width:28px; height:28px; border-radius:6px; background:#dbeafe; display:grid; place-items:center; }
+        .nav { display:flex; gap:22px; }
+        .nav a { text-decoration:none; color:#334155; font-size:14px; }
+        .user { display:flex; align-items:center; gap:10px; font-size:13px; color:#475569; }
+        .user .btn { height:34px; padding:0 12px; border:1px solid var(--border); border-radius:8px; background:#fff; cursor:pointer; }
+        .main { padding:26px 0 40px; }
+        h1 { margin:0; font-size:42px; }
+        .sub { margin:8px 0 0; color:var(--muted); }
+        .stats { margin-top:20px; display:grid; grid-template-columns: repeat(6, 1fr); gap:10px; }
+        .stat { background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px; min-height:84px; }
+        .stat__label { color:#64748b; font-size:12px; }
+        .stat__value { margin-top:8px; font-size:30px; font-weight:800; }
+        .layout { margin-top:16px; display:grid; grid-template-columns: 1fr 340px; gap:12px; }
+        .cards { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+        .card { background:#fff; border:1px solid var(--border); border-radius:12px; padding:14px; min-height:148px; position:relative; }
+        .card__icon { width:34px; height:34px; border-radius:10px; background:#dbeafe; display:grid; place-items:center; }
+        .card__title { margin:12px 0 6px; font-size:20px; font-weight:700; }
+        .card__desc { color:#64748b; font-size:13px; margin:0 0 12px; }
+        .card__btn { height:36px; border-radius:8px; background:var(--primary); color:#fff; border:0; width:100%; cursor:pointer; font-size:13px; }
+        .dot { position:absolute; right:14px; top:12px; width:20px; height:20px; border-radius:999px; background:#ef4444; color:#fff; font-size:11px; display:grid; place-items:center; font-weight:700; }
+        .notifications { background:#fff; border:1px solid var(--border); border-radius:12px; padding:12px; height: 100%; }
+        .notifications h2 { margin:0 0 8px; font-size:18px; }
+        .noti-list { display:flex; flex-direction:column; gap:8px; max-height:640px; overflow:auto; }
+        .noti-item { border:1px solid #eef2f7; border-radius:10px; padding:10px; font-size:13px; }
+        .noti-title { margin:0; font-weight:700; }
+        .noti-msg { margin:4px 0 0; color:#64748b; }
+        .noti-time { margin:6px 0 0; color:#94a3b8; font-size:12px; }
+        .noti-btn { margin-top:8px; border:1px solid var(--border); background:#fff; border-radius:6px; padding:4px 8px; cursor:pointer; font-size:12px; }
+        .muted { color:#64748b; }
+        @media (max-width: 1180px) {
+            .stats { grid-template-columns: repeat(3, 1fr); }
+            .layout { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 760px) {
+            .cards { grid-template-columns: 1fr; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            h1 { font-size:34px; }
+            .nav { display:none; }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <a class="brand" href="/cabinet/agent/index.html">
+            <span class="brand__icon">A</span>
+            <span>ОСАГО онлайн</span>
+        </a>
+        <nav class="nav">
+            <a href="#">Полисы</a>
+            <a href="#">Претензии</a>
+            <a href="#">Клиенты</a>
+            <a href="#">Отчеты</a>
+        </nav>
+        <div class="user">
+            <span id="agentName">Агент</span>
+            <button id="logoutBtn" class="btn">Выйти</button>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+    <div class="container">
+        <h1>Личный кабинет страхового агента</h1>
+        <p class="sub">Управление полисами, претензиями и взаимодействие с клиентами</p>
+
+        <section class="stats">
+            <div class="stat"><div class="stat__label">Активные полисы</div><div id="activePolicies" class="stat__value">0</div></div>
+            <div class="stat"><div class="stat__label">Ожидающие заявки</div><div id="pendingApplications" class="stat__value">0</div></div>
+            <div class="stat"><div class="stat__label">Рассматриваемые</div><div id="claimsInReview" class="stat__value">0</div></div>
+            <div class="stat"><div class="stat__label">Всего клиентов</div><div id="clientsTotal" class="stat__value">0</div></div>
+            <div class="stat"><div class="stat__label">Завершено сегодня</div><div id="completedToday" class="stat__value">0</div></div>
+            <div class="stat"><div class="stat__label">Новых уведомлений</div><div id="unreadNotifications" class="stat__value">0</div></div>
+        </section>
+
+        <section class="layout">
+            <div class="cards">
+                <article class="card">
+                    <div class="card__icon">📄</div>
+                    <span id="applicationsDot" class="dot">0</span>
+                    <h3 class="card__title">Заявки на полис</h3>
+                    <p class="card__desc">Входящие заявки от клиентов</p>
+                    <button class="card__btn" type="button">Просмотреть заявки</button>
+                </article>
+                <article class="card">
+                    <div class="card__icon">🧾</div>
+                    <span id="claimsDot" class="dot">0</span>
+                    <h3 class="card__title">Страховые претензии</h3>
+                    <p class="card__desc">Поданные страховые заявления</p>
+                    <button class="card__btn" type="button">Проверить заявки</button>
+                </article>
+                <article class="card">
+                    <div class="card__icon">🛡️</div>
+                    <h3 class="card__title">Полисы клиентов</h3>
+                    <p class="card__desc">Активные и истекшие полисы клиентов</p>
+                    <button class="card__btn" type="button">Просмотреть полисы</button>
+                </article>
+                <article class="card">
+                    <div class="card__icon">➕</div>
+                    <h3 class="card__title">Создать полис</h3>
+                    <p class="card__desc">Оформить новый полис для клиента</p>
+                    <button class="card__btn" type="button">Создать новый полис</button>
+                </article>
+                <article class="card">
+                    <div class="card__icon">💬</div>
+                    <span id="clientUpdatesDot" class="dot">0</span>
+                    <h3 class="card__title">Общение с клиентами</h3>
+                    <p class="card__desc">Чаты и сообщения от клиентов</p>
+                    <button class="card__btn" type="button">Открыть чаты</button>
+                </article>
+                <article class="card">
+                    <div class="card__icon">📊</div>
+                    <h3 class="card__title">Отчеты</h3>
+                    <p class="card__desc">Статистика и аналитика работы</p>
+                    <button class="card__btn" type="button">Создать отчеты</button>
+                </article>
+            </div>
+            <aside class="notifications">
+                <h2>Уведомления</h2>
+                <div id="notificationsList" class="noti-list">
+                    <div class="muted">Нет уведомлений</div>
+                </div>
+            </aside>
+        </section>
+    </div>
+</main>
+<script src="/cabinet/agent/agent.js"></script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Детали страхового случая</title>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --text: #111827;
+            --muted: #6b7280;
+            --primary: #2563eb;
+            --good: #16a34a;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; color: var(--text); background: var(--bg); }
+        .container { width: min(980px, calc(100% - 40px)); margin: 0 auto; }
+        .header { background: var(--surface); border-bottom: 1px solid var(--border); }
+        .header__inner { height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+        .brand { text-decoration: none; color: var(--text); font-weight: 700; font-size: 18px; }
+        .nav { display: flex; gap: 28px; }
+        .nav a { text-decoration: none; color: #374151; font-size: 15px; }
+        .cabinet-btn { border: 1px solid var(--border); border-radius: 9px; background: #fff; height: 34px; padding: 0 12px; cursor: pointer; }
+        main { padding: 28px 0 60px; }
+        .back-link { text-decoration: none; color: var(--primary); font-size: 14px; }
+        .title { margin: 14px 0 6px; font-size: 36px; line-height: 1.15; }
+        .subtitle { margin: 0 0 16px; color: var(--muted); font-size: 15px; }
+        .card { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 14px; }
+        .head-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+        .claim-label { font-size: 28px; font-weight: 700; }
+        .muted { color: var(--muted); font-size: 14px; }
+        .badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 6px 10px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+        .badge--review { background: #dbeafe; color: #1d4ed8; }
+        .badge--approved { background: #dcfce7; color: #15803d; }
+        .badge--paid { background: #d1fae5; color: #047857; }
+        .badge--rejected { background: #fee2e2; color: #b91c1c; }
+        .badge--sent { background: #f3f4f6; color: #4b5563; }
+        .badge--default { background: #eef2ff; color: #3730a3; }
+        .meta-grid { margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+        .meta-title { color: var(--muted); font-size: 13px; margin-bottom: 4px; }
+        .meta-value { font-size: 15px; }
+        .section-title { margin: 20px 0 8px; font-size: 16px; font-weight: 700; }
+        .desc-box { margin: 0; color: #374151; line-height: 1.45; white-space: pre-wrap; }
+        .notice { margin-top: 10px; border: 1px solid #bfdbfe; background: #eff6ff; color: #1e3a8a; border-radius: 10px; padding: 10px 12px; font-size: 14px; }
+        .attachments { display: grid; gap: 10px; }
+        .attachment { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+        .attachment__meta { color: var(--muted); font-size: 12px; margin-top: 3px; }
+        .download-link { color: var(--primary); text-decoration: none; font-size: 13px; white-space: nowrap; border: 0; background: transparent; cursor: pointer; padding: 0; }
+        .timeline { margin: 2px 0 0; padding: 0; list-style: none; }
+        .timeline li { display: grid; grid-template-columns: 18px 1fr; gap: 10px; padding: 6px 0; align-items: start; }
+        .dot { width: 12px; height: 12px; border-radius: 999px; margin-top: 4px; border: 2px solid #d1d5db; background: #fff; }
+        .dot.done { border-color: var(--good); background: #dcfce7; }
+        .dot.active { border-color: #3b82f6; background: #dbeafe; }
+        .history { margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px; }
+        .history-item { padding: 6px 0; display: grid; grid-template-columns: 165px 1fr; gap: 10px; font-size: 14px; }
+        .agent-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .agent-pill { width: 34px; height: 34px; border-radius: 999px; background: #f3f4f6; display: grid; place-items: center; color: #4b5563; font-size: 12px; font-weight: 700; }
+        .agent-left { display: flex; gap: 10px; align-items: center; }
+        .primary-btn, .ghost-btn { border-radius: 9px; height: 34px; padding: 0 12px; cursor: pointer; }
+        .primary-btn { border: 0; background: var(--primary); color: #fff; }
+        .primary-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+        .ghost-btn { border: 1px solid var(--border); background: #fff; color: #111827; }
+        .error { margin: 12px 0 16px; padding: 12px 14px; border: 1px solid #fecaca; background: #fef2f2; color: #991b1b; border-radius: 10px; display: none; }
+        .success { margin: 12px 0 16px; padding: 12px 14px; border: 1px solid #bbf7d0; background: #f0fdf4; color: #166534; border-radius: 10px; display: none; }
+        textarea { width: 100%; min-height: 90px; border: 1px solid #d1d5db; border-radius: 10px; padding: 10px 12px; font: inherit; resize: vertical; }
+        .row { display: flex; justify-content: flex-end; margin-top: 10px; }
+        @media (max-width: 900px) {
+            .container { width: min(980px, calc(100% - 24px)); }
+            .title { font-size: 30px; }
+            .meta-grid { grid-template-columns: 1fr; gap: 12px; }
+            .agent-row { flex-direction: column; align-items: flex-start; }
+            .history-item { grid-template-columns: 1fr; gap: 4px; }
+            .nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <a class="brand" href="/">ОСАГО Онлайн</a>
+        <nav class="nav">
+            <a href="/cabinet/client/policies/index.html">Полисы</a>
+            <a href="/cabinet/client/claims/index.html">Заявления</a>
+            <a href="/cabinet/client/chat/index.html">Поддержка</a>
+            <a href="/about/index.html">О компании</a>
+        </nav>
+        <button id="cabinetBtn" class="cabinet-btn">Личный кабинет</button>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <a href="/cabinet/client/claims/index.html" class="back-link">← Вернуться к списку заявок</a>
+        <h1 class="title">Отслеживание страховых случаев</h1>
+        <p class="subtitle">Просмотр статуса и деталей ваших страховых заявлений</p>
+
+        <div id="err" class="error"></div>
+        <div id="ok" class="success"></div>
+
+        <section class="card">
+            <div class="head-row">
+                <div class="claim-label" id="claimLabel">Заявка</div>
+                <span id="statusBadge" class="badge badge--default">—</span>
+            </div>
+            <p class="muted" id="policyLabel">Полис: —</p>
+            <div id="claimNotice" class="notice">Загрузка уведомлений по заявке...</div>
+
+            <div class="meta-grid">
+                <div>
+                    <div class="meta-title">Дата происшествия</div>
+                    <div class="meta-value" id="accidentAt">—</div>
+                </div>
+                <div>
+                    <div class="meta-title">Место происшествия</div>
+                    <div class="meta-value" id="accidentPlace">—</div>
+                </div>
+            </div>
+
+            <div class="section-title">Описание происшествия</div>
+            <p id="description" class="desc-box">—</p>
+
+            <div class="section-title">Загруженные документы</div>
+            <div id="attachments" class="attachments"></div>
+        </section>
+
+        <section class="card">
+            <h3 class="section-title" style="margin-top:0;">Добавить информацию по заявке</h3>
+            <p class="muted">Если агент запросил документы или уточнения, напишите комментарий здесь.</p>
+            <textarea id="clientNote" placeholder="Введите дополнительную информацию по страховому случаю"></textarea>
+            <div style="margin-top:10px;">
+                <input id="clientFiles" type="file" multiple />
+                <div class="muted" style="margin-top:6px;">Можно прикрепить фото, сканы документов и другие файлы (до 20MB каждый).</div>
+            </div>
+            <div class="row" style="gap:8px;">
+                <button id="sendFilesBtn" class="ghost-btn" type="button">Загрузить файлы</button>
+                <button id="sendNoteBtn" class="primary-btn" type="button">Отправить комментарий</button>
+            </div>
+        </section>
+
+        <section id="payoutSection" class="card" style="display:none;">
+            <h3 class="section-title" style="margin-top:0;">Получить выплату</h3>
+            <p class="muted">Заявка одобрена. Укажите реквизиты для перечисления страховой выплаты.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <label>
+                    <div class="muted" style="margin-bottom:6px;">Банк</div>
+                    <input id="payoutBank" type="text" placeholder="Например, Сбербанк" style="width:100%;height:40px;border:1px solid #d1d5db;border-radius:10px;padding:0 12px;font:inherit;">
+                </label>
+                <label>
+                    <div class="muted" style="margin-bottom:6px;">Номер карты</div>
+                    <input id="payoutCard" type="text" placeholder="0000 0000 0000 0000" style="width:100%;height:40px;border:1px solid #d1d5db;border-radius:10px;padding:0 12px;font:inherit;">
+                </label>
+            </div>
+            <div class="row" style="margin-top:12px;">
+                <button id="requestPayoutBtn" class="primary-btn" type="button">Получить выплату</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3 class="section-title" style="margin-top:0;">Этапы обработки заявки</h3>
+            <ul class="timeline" id="timeline"></ul>
+
+            <div class="history">
+                <h3 class="section-title" style="margin-top:0;">История изменений</h3>
+                <div id="history"></div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h3 class="section-title" style="margin-top:0;">Ваш страховой агент</h3>
+            <div class="agent-row">
+                <div class="agent-left">
+                    <div id="agentInitials" class="agent-pill">—</div>
+                    <div>
+                        <div id="agentName" class="meta-value">Агент не назначен</div>
+                        <div id="agentContact" class="muted">—</div>
+                    </div>
+                </div>
+                <button id="contactAgentBtn" class="primary-btn">Связаться с агентом</button>
+            </div>
+        </section>
+
+        <button id="backBtn" class="ghost-btn">Вернуться в личный кабинет</button>
+    </div>
+</main>
+
+<script src="/cabinet/client/claims/detail.js"></script>
+</body>
+</html>

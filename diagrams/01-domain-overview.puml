@@ -1,0 +1,78 @@
+@startuml
+title OSAGO System - Domain Overview
+
+skinparam linetype ortho
+skinparam packageStyle rectangle
+
+package "vkr.osago.user" {
+  class UserEntity
+  enum UserStatus
+  interface UserRepository
+}
+
+package "vkr.osago.policies" {
+  class PolicyWorkflow
+  class ClientPoliciesController
+}
+
+package "vkr.osago.osago" {
+  class OsagoController
+  class TariffCalculator
+  class PaymentWorkflow
+}
+
+package "vkr.osago.claims.entity" {
+  class ClaimEntity
+  class ClaimAttachmentEntity
+  enum ClaimStatus
+  enum AccidentType
+}
+
+package "vkr.osago.claims.service" {
+  class ClaimService
+}
+
+package "vkr.osago.claims.repo" {
+  interface ClaimRepository
+  interface ClaimAttachmentRepository
+}
+
+package "vkr.osago.notifications" {
+  class NotificationWorkflow
+  class ClientNotificationsController
+}
+
+package "vkr.osago.agent" {
+  class AgentAssignmentService
+  class AgentClaimsController
+}
+
+UserEntity --> UserStatus
+UserRepository --> UserEntity
+
+ClaimEntity --> ClaimStatus
+ClaimEntity --> AccidentType
+ClaimAttachmentEntity --> ClaimEntity
+
+ClaimService --> ClaimRepository
+ClaimService --> ClaimEntity
+
+AgentClaimsController --> ClaimAttachmentRepository
+AgentClaimsController --> UserRepository
+AgentClaimsController --> ClaimEntity
+
+OsagoController --> UserRepository
+OsagoController --> AgentAssignmentService
+OsagoController --> PolicyWorkflow
+OsagoController --> PaymentWorkflow
+
+ClientPoliciesController --> UserRepository
+ClientPoliciesController --> PolicyWorkflow
+
+ClientNotificationsController --> NotificationWorkflow
+NotificationWorkflow --> UserEntity
+
+TariffCalculator --> PolicyWorkflow
+PaymentWorkflow --> PolicyWorkflow
+
+@enduml

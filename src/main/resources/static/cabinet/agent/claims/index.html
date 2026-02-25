@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Претензии клиентов - Кабинет агента</title>
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --surface: #ffffff;
+            --border: #e5e7eb;
+            --text: #0f172a;
+            --muted: #64748b;
+            --primary: #0a1021;
+            --accent: #2563eb;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: var(--bg); color: var(--text); }
+        .container { width: min(1160px, calc(100% - 24px)); margin: 0 auto; }
+        .header { background: #fff; border-bottom: 1px solid var(--border); }
+        .header__inner { height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); font-weight: 700; }
+        .brand__icon { width: 26px; height: 26px; border-radius: 6px; background: #dbeafe; display: grid; place-items: center; }
+        .header__right { display: flex; align-items: center; gap: 10px; color: #475569; font-size: 13px; }
+        .btn { height: 36px; border-radius: 8px; border: 1px solid var(--border); background: #fff; padding: 0 14px; cursor: pointer; }
+        .main { padding: 24px 0 40px; }
+        h1 { margin: 0; font-size: 34px; }
+        .sub { margin: 8px 0 0; color: var(--muted); }
+        .panel { margin-top: 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px; }
+        .filters { display: grid; grid-template-columns: 220px 1fr auto auto; gap: 10px; align-items: center; }
+        .input, .select {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 0 12px;
+            font-size: 14px;
+            color: #0f172a;
+            background: #fff;
+        }
+        .btn-primary {
+            height: 40px;
+            border-radius: 10px;
+            border: 0;
+            background: var(--primary);
+            color: #fff;
+            padding: 0 16px;
+            cursor: pointer;
+        }
+        .btn-ghost {
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: #334155;
+            padding: 0 16px;
+            cursor: pointer;
+        }
+        .error {
+            margin-top: 12px;
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: #991b1b;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+            display: none;
+        }
+        .table-wrap { margin-top: 12px; overflow: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        th, td { padding: 10px 8px; border-bottom: 1px solid #eef2f7; vertical-align: top; text-align: left; font-size: 14px; }
+        th { color: #64748b; font-weight: 600; }
+        .status { font-size: 12px; border-radius: 999px; padding: 4px 10px; display: inline-block; }
+        .status-NEW { background: #dbeafe; color: #1d4ed8; }
+        .status-IN_REVIEW { background: #ede9fe; color: #6d28d9; }
+        .status-NEED_INFO { background: #ffedd5; color: #c2410c; }
+        .status-APPROVED { background: #dcfce7; color: #166534; }
+        .status-REJECTED { background: #fee2e2; color: #991b1b; }
+        .status-CLOSED { background: #e2e8f0; color: #334155; }
+        .empty { padding: 20px; color: #64748b; text-align: center; }
+        .pager { margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .pager__info { color: #64748b; font-size: 14px; }
+        .pager__actions { display: flex; gap: 8px; }
+        .link-btn {
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 8px;
+            height: 32px;
+            padding: 0 12px;
+            cursor: pointer;
+            color: #1e293b;
+        }
+        @media (max-width: 920px) {
+            .filters { grid-template-columns: 1fr; }
+            .btn-primary, .btn-ghost { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <a class="brand" href="/cabinet/agent/index.html">
+            <span class="brand__icon">A</span>
+            <span>ОСАГО Онлайн</span>
+        </a>
+        <div class="header__right">
+            <span id="agentName">Агент</span>
+            <button class="btn" id="backBtn" type="button">В кабинет</button>
+            <button class="btn" id="logoutBtn" type="button">Выйти</button>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+    <div class="container">
+        <h1>Претензии клиентов</h1>
+        <p class="sub">Список заявлений, которые закреплены за вами</p>
+
+        <section class="panel">
+            <div class="filters">
+                <select id="statusFilter" class="select">
+                    <option value="">Все статусы</option>
+                    <option value="NEW">Новая</option>
+                    <option value="IN_REVIEW">На рассмотрении</option>
+                    <option value="NEED_INFO">Нужны документы</option>
+                    <option value="APPROVED">Одобрена</option>
+                    <option value="REJECTED">Отклонена</option>
+                    <option value="CLOSED">Закрыта</option>
+                </select>
+                <input id="qFilter" class="input" type="text" placeholder="Поиск: номер заявки, полис, ФИО клиента" />
+                <button id="applyBtn" class="btn-primary" type="button">Применить</button>
+                <button id="resetBtn" class="btn-ghost" type="button">Сбросить</button>
+            </div>
+
+            <div id="errorBox" class="error"></div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Заявка</th>
+                        <th>Клиент</th>
+                        <th>Полис</th>
+                        <th>Дата ДТП</th>
+                        <th>Статус</th>
+                        <th>Создано</th>
+                        <th>Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody id="claimsBody">
+                    <tr><td class="empty" colspan="7">Загрузка...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pager">
+                <div id="pagerInfo" class="pager__info">Страница 1</div>
+                <div class="pager__actions">
+                    <button id="prevBtn" class="link-btn" type="button">Назад</button>
+                    <button id="nextBtn" class="link-btn" type="button">Вперед</button>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script src="/cabinet/agent/claims/claims.js"></script>
+</body>
+</html>

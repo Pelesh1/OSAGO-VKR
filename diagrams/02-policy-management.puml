@@ -1,0 +1,67 @@
+@startuml
+title OSAGO System - Policy Management
+
+skinparam linetype ortho
+skinparam packageStyle rectangle
+
+package "Controllers" {
+  class OsagoController
+  class ClientPoliciesController
+  class AgentPolicyApplicationsController
+  class AgentPoliciesController
+}
+
+package "Workflows" {
+  class PolicyWorkflow {
+    +validateCreateRequest(data)
+    +nextStatus(current, action)
+    +canDeleteDraft(appStatus, policyStatus)
+  }
+  class PaymentWorkflow {
+    +validateCardPayment(input)
+    +completePayment(state)
+  }
+}
+
+package "Services" {
+  class AgentAssignmentService
+}
+
+package "Persistence" {
+  interface UserRepository
+  class JdbcTemplate
+}
+
+package "PolicyWorkflow Types" {
+  class PolicyApplicationData
+  enum PolicyApplicationStatus
+  enum PolicyStatus
+  enum PolicyAction
+}
+
+OsagoController --> UserRepository
+OsagoController --> JdbcTemplate
+OsagoController --> AgentAssignmentService
+OsagoController --> PolicyWorkflow
+OsagoController --> PaymentWorkflow
+
+ClientPoliciesController --> UserRepository
+ClientPoliciesController --> JdbcTemplate
+ClientPoliciesController --> PolicyWorkflow
+
+AgentPolicyApplicationsController --> UserRepository
+AgentPolicyApplicationsController --> JdbcTemplate
+AgentPolicyApplicationsController --> PolicyWorkflow
+
+AgentPoliciesController --> UserRepository
+AgentPoliciesController --> JdbcTemplate
+
+PolicyWorkflow --> PolicyApplicationData
+PolicyWorkflow --> PolicyApplicationStatus
+PolicyWorkflow --> PolicyStatus
+PolicyWorkflow --> PolicyAction
+
+PaymentWorkflow --> PolicyApplicationStatus
+PaymentWorkflow --> PolicyStatus
+
+@enduml

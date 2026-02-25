@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Страхование авто</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="header">
+    <div class="container header__inner">
+        <a class="logo" href="/" aria-label="На главную">
+            <span class="logo__box">A</span>
+        </a>
+
+        <nav class="nav" aria-label="Навигация">
+            <a class="nav__link" href="/insurance/osago/">Калькулятор</a>
+            <a class="nav__link" href="/about/index.html">О компании</a>
+            <a class="nav__link" href="/contacts/index.html">Контакты</a>
+        </nav>
+
+        <div class="header__actions">
+            <a id="loginLink" class="btn btn--ghost" href="/login/index.html">Войти</a>
+            <span id="userLabel" class="btn btn--ghost" style="display:none;"></span>
+            <a id="logoutLink" class="btn btn--ghost" href="#" style="display:none;">Выйти</a>
+            <button class="icon-btn" aria-label="Профиль">
+                <span aria-hidden="true">&#128100;</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="page">
+    <div class="container main">
+        <section class="cards" id="insurance">
+            <article class="card">
+                <div class="card__icon" aria-hidden="true">&#128663;</div>
+                <h2 class="card__title">ОСАГО онлайн</h2>
+                <p class="card__text">Быстрый расчет стоимости и оформление полиса онлайн.</p>
+                <a class="btn btn--primary card__btn" href="/insurance/osago/">Оформить ОСАГО</a>
+            </article>
+
+            <article class="card">
+                <div class="card__icon" aria-hidden="true">&#128737;</div>
+                <h2 class="card__title">КАСКО онлайн</h2>
+                <p class="card__text">Персональная защита автомобиля с расширенными рисками.</p>
+                <a class="btn btn--primary card__btn" href="/insurance/kasko/">Рассчитать КАСКО</a>
+            </article>
+        </section>
+
+        <section class="news">
+            <a class="news-item" href="/news/tariffs-2026.html">
+                <div class="news-item__text">
+                    <h3 class="news-item__title">Изменения тарифов ОСАГО в 2026 году</h3>
+                    <p class="news-item__desc">Актуальные параметры расчета и коэффициенты для различных регионов и категорий ТС.</p>
+                </div>
+                <time class="news-item__date" datetime="2026-02-10">10 февраля 2026</time>
+            </a>
+
+            <a class="news-item" href="/news/how-to-submit-claim.html">
+                <div class="news-item__text">
+                    <h3 class="news-item__title">Как подать заявление по страховому случаю</h3>
+                    <p class="news-item__desc">Пошаговый процесс подачи заявки, загрузки документов и отслеживания статуса.</p>
+                </div>
+                <time class="news-item__date" datetime="2026-02-05">5 февраля 2026</time>
+            </a>
+
+            <a class="news-item" href="/news/e-policy-guide.html">
+                <div class="news-item__text">
+                    <h3 class="news-item__title">Электронный полис ОСАГО: как хранить и предъявлять</h3>
+                    <p class="news-item__desc">Разбор юридической силы e-полиса, как показать документ инспектору и где хранить копию.</p>
+                </div>
+                <time class="news-item__date" datetime="2026-01-28">28 января 2026</time>
+            </a>
+        </section>
+    </div>
+</main>
+
+<script src="/app-auth.js"></script>
+</body>
+</html>
