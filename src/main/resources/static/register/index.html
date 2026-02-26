@@ -1,12 +1,11 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Р РµРіРёСЃС‚СЂР°С†РёСЏ</title>
+    <title>Регистрация</title>
     <link rel="stylesheet" href="/styles.css">
     <style>
-        /* РјРёРЅРёРјР°Р»СЊРЅРѕ, С‡С‚РѕР±С‹ Р±С‹Р»Рѕ РїРѕС…РѕР¶Рµ РЅР° РјР°РєРµС‚ */
         body { margin:0; font-family: Arimo, Arial, sans-serif; background:#F8FAFC; }
         .wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px; }
         .card { width:480px; background:#fff; border-radius:10px; padding:32px; box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06); }
@@ -22,33 +21,33 @@
 <body>
 <div class="wrap">
     <div class="card">
-        <h1>Р РµРіРёСЃС‚СЂР°С†РёСЏ</h1>
+        <h1>Регистрация</h1>
 
         <form id="regForm">
-            <label>РРјСЏ</label>
-            <input id="firstName" required placeholder="РРІР°РЅ">
+            <label>Имя</label>
+            <input id="firstName" required placeholder="Иван">
 
-            <label>Р¤Р°РјРёР»РёСЏ</label>
-            <input id="lastName" required placeholder="РџРµС‚СЂРѕРІ">
+            <label>Фамилия</label>
+            <input id="lastName" required placeholder="Петров">
 
-            <label>РћС‚С‡РµСЃС‚РІРѕ</label>
-            <input id="middleName" placeholder="РђР»РµРєСЃР°РЅРґСЂРѕРІРёС‡">
+            <label>Отчество</label>
+            <input id="middleName" placeholder="Александрович">
 
-            <label>Р­Р»РµРєС‚СЂРѕРЅРЅР°СЏ РїРѕС‡С‚Р°</label>
+            <label>Электронная почта</label>
             <input id="email" type="email" required placeholder="example@mail.com">
 
-            <label>РџР°СЂРѕР»СЊ</label>
-            <input id="password" type="password" required placeholder="РЎРѕР·РґР°Р№С‚Рµ РїР°СЂРѕР»СЊ">
+            <label>Пароль</label>
+            <input id="password" type="password" required placeholder="Создайте пароль">
 
-            <label>РџРѕРґС‚РІРµСЂРґРёС‚Рµ РїР°СЂРѕР»СЊ</label>
-            <input id="password2" type="password" required placeholder="РџРѕРІС‚РѕСЂРёС‚Рµ РїР°СЂРѕР»СЊ">
+            <label>Подтвердите пароль</label>
+            <input id="password2" type="password" required placeholder="Повторите пароль">
 
-            <button type="submit">Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°С‚СЊСЃСЏ</button>
+            <button type="submit">Зарегистрироваться</button>
 
             <div id="err" class="err"></div>
             <div id="ok" class="ok"></div>
 
-            <a class="link" href="/login/index.html">РќР°Р·Р°Рґ Рє РІС…РѕРґСѓ</a>
+            <a class="link" href="/login/index.html">Назад ко входу</a>
         </form>
     </div>
 </div>
@@ -56,4 +55,3 @@
 <script src="/register/register.js"></script>
 </body>
 </html>
-

@@ -48,7 +48,6 @@ form.addEventListener('submit', async (e) => {
             return;
         }
 
-        // пытаемся прочитать сообщение (если backend отдаёт текст/JSON)
         const text = await res.text();
         if (res.status === 400 || res.status === 409) {
             showError(text || 'Пользователь с таким email уже существует');
