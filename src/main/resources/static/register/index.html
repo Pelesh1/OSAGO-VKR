@@ -16,6 +16,7 @@
         .link { display:block; text-align:center; margin-top:16px; color:#0A0A0A; text-decoration:none; }
         .err { margin-top:12px; color:#B91C1C; font-size:14px; display:none; }
         .ok { margin-top:12px; color:#166534; font-size:14px; display:none; }
+        .field-err { margin-top:6px; color:#B91C1C; font-size:13px; display:none; }
     </style>
 </head>
 <body>
@@ -25,22 +26,23 @@
 
         <form id="regForm">
             <label>Имя</label>
-            <input id="firstName" required placeholder="Иван">
+            <input id="firstName" required minlength="2" maxlength="50" pattern="^[A-Za-zА-Яа-яЁё\\-\\s]+$" placeholder="Иван">
 
             <label>Фамилия</label>
-            <input id="lastName" required placeholder="Петров">
+            <input id="lastName" required minlength="2" maxlength="50" pattern="^[A-Za-zА-Яа-яЁё\\-\\s]+$" placeholder="Петров">
 
             <label>Отчество</label>
-            <input id="middleName" placeholder="Александрович">
+            <input id="middleName" minlength="2" maxlength="50" pattern="^[A-Za-zА-Яа-яЁё\\-\\s]*$" placeholder="Александрович">
 
             <label>Электронная почта</label>
-            <input id="email" type="email" required placeholder="example@mail.com">
+            <input id="email" type="email" required maxlength="120" placeholder="example@mail.com">
+            <div id="emailErr" class="field-err"></div>
 
             <label>Пароль</label>
-            <input id="password" type="password" required placeholder="Создайте пароль">
+            <input id="password" type="password" required minlength="8" maxlength="64" placeholder="Создайте пароль">
 
             <label>Подтвердите пароль</label>
-            <input id="password2" type="password" required placeholder="Повторите пароль">
+            <input id="password2" type="password" required minlength="8" maxlength="64" placeholder="Повторите пароль">
 
             <button type="submit">Зарегистрироваться</button>
 
