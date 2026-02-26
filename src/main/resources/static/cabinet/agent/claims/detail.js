@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const takeBtn = document.getElementById("takeBtn");
         takeBtn.disabled = !canReview;
-        takeBtn.style.display = hideTake ? "none" : "inline-flex";
+        takeBtn.style.display = hideTake ? "none" : "block";
 
         document.getElementById("needInfoBtn").disabled = !canDecide;
         document.getElementById("approveBtn").disabled = !canDecide;

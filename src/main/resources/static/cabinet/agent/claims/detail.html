@@ -322,9 +322,13 @@
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 8px;
+            align-items: stretch;
         }
 
         .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             height: 36px;
             border-radius: 8px;
             border: 1px solid var(--border);
