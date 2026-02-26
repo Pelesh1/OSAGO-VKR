@@ -10,4 +10,9 @@ public class WebRouteFixController {
     public String osagoIndex() {
         return "forward:/insurance/osago/index.html";
     }
+
+    @GetMapping({"/insurance/kasko", "/insurance/kasko/", "/insurance/kasko/."})
+    public String kaskoIndex() {
+        return "forward:/insurance/kasko/index.html";
+    }
 }
